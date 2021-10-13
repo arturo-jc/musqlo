@@ -1,0 +1,8 @@
+.table > tbody > tr> .no-padding-please {border-top: 0; padding:0;}
+
+td> .no-bottom-margin {margin-bottom: 0;}
+
+.edit-text {
+font-size: 12px;
+font-weight: normal;
+}

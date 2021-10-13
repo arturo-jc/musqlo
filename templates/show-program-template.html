@@ -1,0 +1,62 @@
+{% include "header.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+<div class="container">
+
+    <h1>Program maker</h1>
+    <p><a href="{{url_for('all')}}"> << All templates</a></p>
+    <h2>{{ template.name }}</h2>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Monday</th>
+                <th>Tuesday</th>
+                <th>Wednesday</th>
+                <th>Thursday</th>
+                <th>Friday</th>
+                <th>Saturday</th>
+                <th>Sunday</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% set weekly_workouts = [monday_workouts, tuesday_workouts, wednesday_workouts, thursday_workouts, friday_workouts, saturday_workouts, sunday_workouts] %}
+        {% for row in range(rows): %}
+            <tr>
+                {% for workouts in weekly_workouts: %}
+                    {% if workouts and row < workouts|count %}
+                        <td class="no-padding-please">
+                            <table class="table table-striped no-bottom-margin">
+                                <thead>
+                                    <tr>
+                                        <th><a href=" {{ url_for('show_workout_template', workout_template_id=workouts[row].id) }}">{{ workouts[row].name }}</a></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for exercise in workouts[row].exercise_templates: %}
+                                        <tr>
+                                            <td>{{exercise.type}} x {{exercise.set_templates|count}}</td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+
+                            </table>
+                        </td>
+                    {% else %}
+                        <td class="no-padding-please"></td>
+                    {% endif %}
+                {% endfor %}
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <h3>Add new workout</h3>
+        {{ wtf.quick_form(form, novalidate=True, button_map={"add": "primary"}) }}
+    <h3>Make program</h3>
+    <p>Generate a program based on this template.</p>
+    <a class="btn btn-primary" href="{{url_for('make_program', program_template_id=template.id)}}">Make</a>
+    <h3>Delete</h3>
+    <a class="btn btn-danger" href="{{url_for('delete_program_template', program_template_id=template.id)}}">Delete</a>
+</div>
+{% include "footer.html" %}
