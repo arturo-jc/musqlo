@@ -20,5 +20,9 @@
     {% else: %}
         <p>You have not added any programs yet.</p>
     {% endif %}
+    <h2>Account</h2>
+<a class="btn btn-primary" href="{{url_for('logout')}}">Log out</a>
+    </br>
+<a class="btn btn-danger" href="{{url_for('delete_user')}}">Delete</a>
 </div>
 {% include "footer.html" %}

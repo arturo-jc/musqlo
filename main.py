@@ -1,12 +1,15 @@
-from flask import Flask, render_template, redirect, url_for
+from flask import Flask, render_template, redirect, url_for, flash, abort, request
 from flask_bootstrap import Bootstrap
 from flask_sqlalchemy import SQLAlchemy
+from flask_login import UserMixin, login_user, LoginManager, login_required, current_user, logout_user
 from sqlalchemy import Column, Integer, String, ForeignKey, Date, Boolean
 from sqlalchemy.orm import relationship
 from forms import LoginForm, RegisterForm, NewProgramForm, NewWorkoutForm, AddExerciseForm, MakeProgramForm
 from brain import Brain
 from datetime import timedelta
 from wtforms.fields import Label
+from werkzeug.security import generate_password_hash, check_password_hash
+from functools import wraps
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = "hola"
@@ -20,17 +23,33 @@ db = SQLAlchemy(app)
 # CREATE BRAIN
 brain = Brain()
 
-# TODO create/configure User, Program, Workout and Set tables
-# DONE 1 Create Program-Workout relationship
-# DONE 2 Make child Set class
-# DONE 3 Create Workout-Set relationship
-# TODO 4 make User class
-# TODO 5 create User-Prorgram relationship
+# LOGIN MANAGER
+login_manager = LoginManager()
+login_manager.init_app(app)
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
+
+
+# CONFIGURE TABLE
+
+class User(UserMixin, db.Model):
+    __tablename__ = "users"
+    id = Column(Integer, primary_key=True)
+    email = Column(String(100), unique=True)
+    password = Column(String(100))
+    name = Column(String(100))
+    program_templates = relationship("ProgramTemplate", back_populates="user")
+    programs = relationship("Program", back_populates="user")
 
 
 class ProgramTemplate(db.Model):
     __tablename__ = "programTemplates"
     id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey("users.id"))
+    user = relationship("User", back_populates="program_templates")
     name = Column(String(250), nullable=False)
     workout_templates = relationship("WorkoutTemplate", back_populates="parent_program_template")
 
@@ -88,6 +107,8 @@ class SetTemplate(db.Model):
 class Program(db.Model):
     __tablename__ = "programs"
     id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey("users.id"))
+    user = relationship("User", back_populates="programs")
     name = Column(String(200), nullable=False)
     weeks = Column(Integer, nullable=False)
     workouts = relationship("Workout", back_populates="parent_program")
@@ -127,31 +148,93 @@ class Set(db.Model):
 # db.create_all()
 #
 # # POPULATE DAYS TABLE THEN COMMENT OUT
-# monday = Day(name="Monday")
-# tuesday = Day(name="Tuesday")
-# wednesday = Day(name="Wednesday")
-# thursday = Day(name="Thursday")
-# friday = Day(name="Friday")
-# saturday = Day(name="Saturday")
-# sunday = Day(name="Sunday")
-# db.session.add(monday)
-# db.session.add(tuesday)
-# db.session.add(wednesday)
-# db.session.add(thursday)
-# db.session.add(friday)
-# db.session.add(saturday)
-# db.session.add(sunday)
+# days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+# for day in days:
+#     new_day = Day(name=day)
+#     db.session.add(new_day)
 # db.session.commit()
-# TODO implement login manager
+
+
+# USER AUTHENTICATION
+
+
+def protect_program_template(f):
+    @wraps(f)
+    def decorated_function(program_template_id, *args, **kwargs):
+        requested_program_template = ProgramTemplate.query.get(program_template_id)
+        if requested_program_template.user_id != current_user.id:
+            return abort(403)
+        return f(program_template_id, *args, **kwargs)
+    return decorated_function
+
+
+def protect_workout_template(f):
+    @wraps(f)
+    def decorated_function(workout_template_id, *args, **kwargs):
+        requested_workout_template = WorkoutTemplate.query.get(workout_template_id)
+        if requested_workout_template.parent_program_template.user_id != current_user.id:
+            return abort(403)
+        return f(workout_template_id, *args, **kwargs)
+    return decorated_function
+
+
+def protect_program(f):
+    @wraps(f)
+    def decorated_function(program_id, *args, **kwargs):
+        requested_program = Program.query.get(program_id)
+        if requested_program.user_id != current_user.id:
+            return abort(403)
+        return f(program_id, *args, **kwargs)
+    return decorated_function
+
+
+def protect_program_week(f):
+    @wraps(f)
+    def decorated_function(program_id, week, *args, **kwargs):
+        requested_program = Program.query.get(program_id)
+        if requested_program.user_id != current_user.id:
+            return abort(403)
+        return f(program_id, week, *args, **kwargs)
+    return decorated_function
+
+
+def protect_workout(f):
+    @wraps(f)
+    def decorated_function(workout_id, *args, **kwargs):
+        requested_workout = Workout.query.get(workout_id)
+        if requested_workout.parent_program.user_id != current_user.id:
+            return abort(403)
+        return f(workout_id, *args, **kwargs)
+    return decorated_function
+
+
+def protect_workout_week(f):
+    @wraps(f)
+    def decorated_function(workout_id, week, *args, **kwargs):
+        requested_workout = Workout.query.get(workout_id)
+        if requested_workout.parent_program.user_id != current_user.id:
+            return abort(403)
+        return f(workout_id, week, *args, **kwargs)
+    return decorated_function
+
+# LOGIN/LOG OUT
 
 
 @app.route("/", methods=["GET", "POST"])
 def login():
     login_form = LoginForm()
     if login_form.validate_on_submit():
-        # TODO check that email exists and password matches
-        # TODO login user
-        return redirect(url_for('all'))
+        user = User.query.filter_by(email=login_form.email.data).first()
+
+        if not user:
+            flash("That email does not exist, please try again.")
+            return redirect(url_for('login'))
+        elif not check_password_hash(user.password, login_form.password.data):
+            flash('Password incorrect, please try again.')
+            return redirect(url_for('login'))
+        else:
+            login_user(user)
+            return redirect(url_for('dashboard'))
     return render_template("login.html", form=login_form)
 
 
@@ -159,29 +242,57 @@ def login():
 def register():
     register_form = RegisterForm()
     if register_form.validate_on_submit():
-        # TODO create user and add it to the database
-        # TODO login user
-        return redirect(url_for('all'))
+        if User.query.filter_by(email=register_form.email.data).first():
+            print(User.query.filter_by(email=register_form.email.data).first())
+            flash("You've already signed up with that email, log in instead!")
+            return redirect(url_for('login'))
+
+        hash_and_salted_password = generate_password_hash(
+            register_form.password.data,
+            method='pbkdf2:sha256',
+            salt_length=8
+        )
+
+        new_user = User(
+            email=register_form.email.data,
+            name=register_form.username.data,
+            password=hash_and_salted_password,
+        )
+        db.session.add(new_user)
+        db.session.commit()
+        login_user(new_user)
+        return redirect(url_for("dashboard"))
     return render_template("register.html", form=register_form)
 
 
-@app.route("/all", methods=["GET", "POST"])
-def all():
-    all_templates = ProgramTemplate.query.all()
-    all_programs = Program.query.all()
+@app.route('/logout')
+def logout():
+    logout_user()
+    return redirect(url_for('login'))
+
+
+# SHOW
+
+
+@app.route("/dashboard", methods=["GET", "POST"])
+@login_required
+def dashboard():
+    all_templates = ProgramTemplate.query.filter(ProgramTemplate.user_id == current_user.id)
+    all_programs = Program.query.filter(Program.user_id == current_user.id)
     new_program_form = NewProgramForm(name="My template")
     if new_program_form.validate_on_submit():
-        new_program_template = ProgramTemplate(name=new_program_form.name.data)
+        new_program_template = ProgramTemplate(
+            name=new_program_form.name.data,
+            user=current_user
+        )
         db.session.add(new_program_template)
         db.session.commit()
         return redirect(url_for("show_program_template", program_template_id=new_program_template.id))
     return render_template("all.html", templates=all_templates, programs=all_programs, form=new_program_form)
 
 
-# SHOW
-
-
 @app.route("/program-templates/<int:program_template_id>", methods=["GET", "POST"])
+@protect_program_template
 def show_program_template(program_template_id):
     current_program_template = ProgramTemplate.query.get(program_template_id)
 
@@ -223,6 +334,7 @@ def show_program_template(program_template_id):
 
 
 @app.route("/workout-templates/<int:workout_template_id>", methods=["GET", "POST"])
+@protect_workout_template
 def show_workout_template(workout_template_id):
     current_workout_template = WorkoutTemplate.query.get(workout_template_id)
     add_exercise_form = AddExerciseForm()
@@ -248,6 +360,7 @@ def show_workout_template(workout_template_id):
 
 
 @app.route("/programs/<int:program_id>/week/<int:week>")
+@protect_program_week
 def show_program(program_id, week):
     current_program = Program.query.get(program_id)
 
@@ -259,7 +372,7 @@ def show_program(program_id, week):
             most_workouts_in_one_day = len(daily_workouts)
         weekly_workouts.append(daily_workouts)
 
-    earliest_workout = Workout.query.filter(Workout.week==week).group_by(Workout.date).first()
+    earliest_workout = Workout.query.filter(Workout.parent_program == current_program, Workout.week == week).group_by(Workout.date).first()
 
     first_day_of_week = earliest_workout.date
     while first_day_of_week.weekday() != 0:
@@ -284,6 +397,7 @@ def show_program(program_id, week):
 
 
 @app.route("/workouts/<int:workout_id>", methods=["GET", "POST"])
+@protect_workout
 def show_workout(workout_id):
     requested_workout = Workout.query.get(workout_id)
     return render_template("show-workout.html", workout=requested_workout)
@@ -293,6 +407,7 @@ def show_workout(workout_id):
 
 
 @app.route("/workout-templates/<int:workout_template_id>/delete")
+@protect_workout_template
 def delete_workout_template(workout_template_id):
     requested_workout_template = WorkoutTemplate.query.get(workout_template_id)
     parent_program_template_id = requested_workout_template.program_template_id
@@ -306,6 +421,7 @@ def delete_workout_template(workout_template_id):
 
 
 @app.route("/program-templates/<int:program_template_id>/delete")
+@protect_program_template
 def delete_program_template(program_template_id):
     requested_program_template = ProgramTemplate.query.get(program_template_id)
     for workout_template in requested_program_template.workout_templates:
@@ -316,10 +432,11 @@ def delete_program_template(program_template_id):
         db.session.delete(workout_template)
     db.session.delete(requested_program_template)
     db.session.commit()
-    return redirect(url_for('all'))
+    return redirect(url_for('dashboard'))
 
 
 @app.route("/week/<int:week>/workouts/<int:workout_id>/delete")
+@protect_workout_week
 def delete_workout(workout_id, week):
     requested_workout = Workout.query.get(workout_id)
     parent_program_id = requested_workout.program_id
@@ -333,6 +450,7 @@ def delete_workout(workout_id, week):
 
 
 @app.route("/programs/<int:program_id>/delete")
+@protect_program
 def delete_program(program_id):
     requested_program = Program.query.get(program_id)
     for workout in requested_program.workouts:
@@ -343,13 +461,39 @@ def delete_program(program_id):
         db.session.delete(workout)
     db.session.delete(requested_program)
     db.session.commit()
-    return redirect(url_for('all'))
+    return redirect(url_for('dashboard'))
+
+
+@app.route("/user/delete")
+@login_required
+def delete_user():
+    for program_template in current_user.program_templates:
+        for workout_template in program_template.workout_templates:
+            for exercise_template in workout_template.exercise_templates:
+                for set_template in exercise_template.set_templates:
+                    db.session.delete(set_template)
+                db.session.delete(exercise_template)
+            db.session.delete(workout_template)
+        db.session.delete(program_template)
+    for program in current_user.programs:
+        for workout in program.workouts:
+            for exercise in workout.exercises:
+                for set in exercise.sets:
+                    db.session.delete(set)
+                db.session.delete(exercise)
+            db.session.delete(workout)
+        db.session.delete(program)
+    db.session.delete(current_user)
+    db.session.commit()
+    flash("Account deleted.")
+    return redirect(url_for('login'))
 
 
 # MAKE PROGRAM
 
 
 @app.route("/program-templates/<int:program_template_id>/make_program", methods=["GET", "POST"])
+@protect_program_template
 def make_program(program_template_id):
     requested_program_template = ProgramTemplate.query.get(program_template_id)
 
@@ -360,6 +504,7 @@ def make_program(program_template_id):
                 exercises.append(exercise_template.type)
 
     make_program_form = MakeProgramForm(
+        name=requested_program_template.name,
         exercises=exercises
     )
 
@@ -368,7 +513,8 @@ def make_program(program_template_id):
         value.name = exercises[count]
 
     if make_program_form.validate_on_submit():
-
+        print(make_program_form.starting_date.data)
+        print(type(make_program_form.starting_date.data))
         starting_weights = {entry.name: entry.starting_weight.data for entry in make_program_form.exercises}
         increments = {entry.name: entry.increment.data for entry in make_program_form.exercises}
         dummy_program = brain.make_dummy_program(
@@ -380,6 +526,7 @@ def make_program(program_template_id):
             )
         new_program = Program(
             name=make_program_form.name.data,
+            user=current_user,
             weeks=dummy_program.weeks
         )
         db.session.add(new_program)

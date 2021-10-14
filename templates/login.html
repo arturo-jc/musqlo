@@ -4,7 +4,13 @@
 
     <h1>Program maker</h1>
     <h2>Log in</h2>
-
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+                <p>{{ message }}</p>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
     {{ wtf.quick_form(form, novalidate=True, button_map={"login": "primary"}) }}
 
     <p>New? <a href="{{ url_for('register') }}">Register here</a></p>
