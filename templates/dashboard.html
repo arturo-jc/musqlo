@@ -1,0 +1,49 @@
+{% extends 'bootstrap/base.html' %}
+{% block content %}
+{% include "header.html" %}
+
+    <div class="row">
+
+        <div class="col-lg-6">
+            <div class="card">
+
+            <h2 class="card-title">Templates</h2>
+
+            {% if templates: %}
+                {% for template in templates: %}
+                   <p><a href="{{ url_for('show_program_template', program_template_id=template.id) }}">{{ template.name }}</a></p>
+                {% endfor %}
+            {% else: %}
+                <p>You have not added any templates yet.</p>
+            {% endif %}
+
+            <form action="" method="post" role="form">
+                {{ form.hidden_tag() }}
+                <div class="input-group">
+                    <span class="input-group-btn">
+                    {{ form.create(class_="btn btn-primary") }}
+                    </span>
+                    {{ form.name(class_="form-control", placeholder="Template's name") }}
+                </div>
+            </form>
+
+            </div><!--end card -->
+        </div><!--end col -->
+
+        <div class="col-lg-6">
+            <div class="card">
+                <h2 class="card-title">Programs</h2>
+                {% if programs: %}
+                    {% for program in programs: %}
+                       <p><a href="{{ url_for('show_program', program_id=program.id, week=1) }}">{{ program.name }}</a></p>
+                    {% endfor %}
+                {% else: %}
+                    <p>You have not added any programs yet.</p>
+                {% endif %}
+            </div><!--end card -->
+        </div><!--end col -->
+
+        </div><!--end row -->
+
+{% include "footer.html" %}
+{% endblock %}

@@ -4,11 +4,43 @@
     <meta charset="UTF-8">
     <title>Program maker</title>
 
-    <!-- Bootstrap core CSS -->
-    <link href="{{ url_for('static', filename='vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
-
     <!-- Custom styles for this template -->
     <link href="{{ url_for('static', filename='css/styles.css')}}" rel="stylesheet">
+
+    <!--  Font Awesome -->
+    <script src="https://kit.fontawesome.com/aebaafdeec.js" crossorigin="anonymous"></script>
+
 </head>
 <body>
-{% extends 'bootstrap/base.html' %}
+
+<!-- Nav Bar -->
+<nav class="navbar navbar-default" role="navigation">
+  <div class="navbar-header">
+    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-links">
+    <span class="sr-only">Toggle navigation</span>
+    <span class="icon-bar"></span>
+    <span class="icon-bar"></span>
+    <span class="icon-bar"></span>
+    </button>
+    <a class="navbar-brand" href="{{url_for('home')}}">MUSQLO</a>
+  </div>
+
+  <div class="collapse navbar-collapse" id="navbar-links">
+  <ul class="nav navbar-nav navbar-right">
+    {% if current_user.is_authenticated: %}
+    <li><a href="{{url_for('user')}}">{{ current_user.name }}</a></li>
+    <li><a href="{{url_for('logout')}}">Log out</a></li>
+    {% else: %}
+    <li><a href="{{ url_for('login') }}">Log in</a></li>
+    <li><a href="{{ url_for('register') }}">Register</a></li>
+    {% endif %}
+  </ul>
+
+
+
+
+  </div>
+</nav>
+
+
+<div class="container-fluid">

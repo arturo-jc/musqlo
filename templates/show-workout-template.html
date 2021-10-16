@@ -1,33 +1,51 @@
-{% include "header.html" %}
+{% extends 'bootstrap/base.html' %}
 {% import "bootstrap/wtf.html" as wtf %}
-<div class="container">
 
-    <h1>Program maker</h1>
-        <p><a href="{{url_for('show_program_template', program_template_id=workout.parent_program_template.id)}}"> << All workouts</a></p>
-    <h2>{{ workout.name }}</h2>
-    <table class="table table-striped">
-        {% for exercise in workout.exercise_templates: %}
-            <thead>
-                <tr>
-                    <th scope="col">{{exercise.type}} x {{ exercise.set_templates|count }} sets</th>
-                    <th scope="col">Reps</th>
-                </tr>
-            </thead>
-            <tbody>
-            {% for set in exercise.set_templates|reverse: %}
-                <tr>
-                    <td></td>
-                    <td>{{set.reps}}</td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        {% endfor %}
-    </table>
+{% block content %}
+{% include "header.html" %}
 
+    <ol class="breadcrumb">
+      <li><a href="{{url_for('dashboard')}}">Templates</a></li>
+     <li><a href="{{url_for('show_program_template', program_template_id=workout.parent_program_template.id)}}">{{workout.parent_program_template.name}}</a></li>
+      <li class="active">{{ workout.name }}</li>
+    </ol>
 
-    <h3>Add an exercise</h3>
-    {{ wtf.quick_form(form, novalidate=True, button_map={"add": "primary"}) }}
-    <h3>Delete workout template</h3>
-    <a class="btn btn-danger" href="{{url_for('delete_workout_template', workout_template_id=workout.id)}}">Delete</a>
-</div>
+    <div class="row">
+
+        <div class="col-lg-6">
+            <div class="card">
+                <h2 class="card-title">{{ workout.name }}</h2>
+                <table class="table table-striped">
+                    {% for exercise in workout.exercise_templates: %}
+                        <thead>
+                            <tr>
+                                <th scope="col">{{exercise.type}} x {{ exercise.set_templates|count }} sets</th>
+                                <th scope="col">Reps</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for set in exercise.set_templates|reverse: %}
+                            <tr>
+                                <td></td>
+                                <td>{{set.reps}}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+             <div class="card">
+                <h2 class="card-title">Add an exercise</h2>
+                {{ wtf.quick_form(form, novalidate=True, button_map={"add": "primary"}) }}
+             </div>
+        </div>
+
+    </div>
+    <div class="text-center">
+        <a class="btn btn-lg btn-danger" href="{{url_for('delete_workout_template', workout_template_id=workout.id)}}">Delete workout</a>
+    </div>
 {% include "footer.html" %}
+{% endblock %}

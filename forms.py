@@ -6,13 +6,13 @@ from wtforms.validators import DataRequired
 
 
 class LoginForm(FlaskForm):
-    email = StringField("Email", validators=[DataRequired()])
+    email = StringField("Email", validators=[DataRequired()], render_kw={'autofocus': True})
     password = PasswordField("Password", validators=[DataRequired()])
     login = SubmitField("Log in")
 
 
 class RegisterForm(FlaskForm):
-    username = StringField("Username", validators=[DataRequired()])
+    username = StringField("Username", validators=[DataRequired()], render_kw={'autofocus': True})
     email = StringField("Email", validators=[DataRequired()])
     password = PasswordField("Password", validators=[DataRequired()])
     register = SubmitField("Register")
@@ -53,8 +53,8 @@ class AddExerciseForm(FlaskForm):
 
 
 class SetWeightsForm(Form):
-    starting_weight = IntegerField("Starting weight", validators=[DataRequired()])
-    increment = IntegerField("Weight increment (per session)", validators=[DataRequired()])
+    starting_weight = IntegerField("Starting weight", validators=[DataRequired()], render_kw={"class": "form-control"})
+    increment = IntegerField("Weight increment (per session)", validators=[DataRequired()], render_kw={"class": "form-control"})
 
 
 class MakeProgramForm(FlaskForm):
@@ -64,4 +64,5 @@ class MakeProgramForm(FlaskForm):
     exercises = FieldList(FormField(SetWeightsForm))
     make = SubmitField("Make program")
 
-
+class TestForm(FlaskForm):
+    test = SubmitField("Test")

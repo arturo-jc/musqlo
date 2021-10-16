@@ -1,5 +1,5 @@
 from datetime import timedelta
-
+import time
 
 class DummyProgram:
     def __init__(self, starting_date, weeks, starting_weights, increments):
@@ -48,16 +48,17 @@ class Brain:
         while week <= new_program.weeks:
             while week == 1:
                 if first_pass:
+
                     # Find first and last days of current week
                     first_day_of_the_week = new_program.starting_date
                     last_day_of_the_week = first_day_of_the_week
                     while last_day_of_the_week.weekday() != 6:
                         last_day_of_the_week += timedelta(1)
 
-                for workout_template in program_template.workout_templates:
-                    for day in workout_template.days:
-                        workout_date = first_day_of_the_week
-                        while workout_date != last_day_of_the_week:
+                workout_date = first_day_of_the_week
+                while workout_date != last_day_of_the_week:
+                    for workout_template in program_template.workout_templates:
+                        for day in workout_template.days:
                             if day.id - 1 == workout_date.weekday():
                                 new_workout = self.make_dummy_workout(
                                     workout_template=workout_template,
@@ -67,7 +68,7 @@ class Brain:
                                 )
                                 self.update_weights(new_workout)
                                 break
-                            workout_date += timedelta(1)
+                    workout_date += timedelta(1)
 
                 # Check if any dummy workouts were created
                 if new_program.workouts:
@@ -80,10 +81,10 @@ class Brain:
             first_day_of_the_week = last_day_of_the_week + timedelta(1)
             last_day_of_the_week = first_day_of_the_week + timedelta(6)
 
-            for workout_template in program_template.workout_templates:
-                for day in workout_template.days:
-                    workout_date = first_day_of_the_week
-                    while workout_date != last_day_of_the_week:
+            workout_date = first_day_of_the_week
+            while workout_date != last_day_of_the_week:
+                for workout_template in program_template.workout_templates:
+                    for day in workout_template.days:
                         if day.id - 1 == workout_date.weekday():
                             new_workout = self.make_dummy_workout(
                                 workout_template=workout_template,
@@ -93,7 +94,7 @@ class Brain:
                             )
                             self.update_weights(new_workout)
                             break
-                        workout_date += timedelta(1)
+                workout_date += timedelta(1)
             week += 1
         return new_program
 

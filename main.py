@@ -1,10 +1,10 @@
-from flask import Flask, render_template, redirect, url_for, flash, abort, request
+from flask import Flask, render_template, redirect, url_for, flash, abort
 from flask_bootstrap import Bootstrap
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin, login_user, LoginManager, login_required, current_user, logout_user
 from sqlalchemy import Column, Integer, String, ForeignKey, Date, Boolean
 from sqlalchemy.orm import relationship
-from forms import LoginForm, RegisterForm, NewProgramForm, NewWorkoutForm, AddExerciseForm, MakeProgramForm
+from forms import LoginForm, RegisterForm, NewProgramForm, NewWorkoutForm, AddExerciseForm, MakeProgramForm, TestForm
 from brain import Brain
 from datetime import timedelta
 from wtforms.fields import Label
@@ -217,10 +217,21 @@ def protect_workout_week(f):
         return f(workout_id, week, *args, **kwargs)
     return decorated_function
 
+@app.route("/", methods=["GET", "POST"])
+def home():
+    if current_user.is_authenticated:
+        return redirect(url_for('dashboard'))
+    return render_template("index.html")
+
+@app.route("/user")
+def user():
+    return render_template("user.html")
+
+
 # LOGIN/LOG OUT
 
 
-@app.route("/", methods=["GET", "POST"])
+@app.route("/login", methods=["GET", "POST"])
 def login():
     login_form = LoginForm()
     if login_form.validate_on_submit():
@@ -268,7 +279,7 @@ def register():
 @app.route('/logout')
 def logout():
     logout_user()
-    return redirect(url_for('login'))
+    return redirect(url_for('home'))
 
 
 # SHOW
@@ -279,7 +290,7 @@ def logout():
 def dashboard():
     all_templates = ProgramTemplate.query.filter(ProgramTemplate.user_id == current_user.id)
     all_programs = Program.query.filter(Program.user_id == current_user.id)
-    new_program_form = NewProgramForm(name="My template")
+    new_program_form = NewProgramForm()
     if new_program_form.validate_on_submit():
         new_program_template = ProgramTemplate(
             name=new_program_form.name.data,
@@ -288,7 +299,7 @@ def dashboard():
         db.session.add(new_program_template)
         db.session.commit()
         return redirect(url_for("show_program_template", program_template_id=new_program_template.id))
-    return render_template("all.html", templates=all_templates, programs=all_programs, form=new_program_form)
+    return render_template("dashboard.html", templates=all_templates, programs=all_programs, form=new_program_form)
 
 
 @app.route("/program-templates/<int:program_template_id>", methods=["GET", "POST"])
@@ -296,19 +307,61 @@ def dashboard():
 def show_program_template(program_template_id):
     current_program_template = ProgramTemplate.query.get(program_template_id)
 
-    weekly_workouts = []
+    # TABLE DATA
+
+    daily_workouts = []
     most_workouts_in_one_day = 0
     for day_id in range(1, 8):
         day = Day.query.get(day_id)
-        daily_workouts = [workout_template for workout_template in current_program_template.workout_templates if day in workout_template.days]
-        weekly_workouts.append(daily_workouts)
-        if len(daily_workouts) > most_workouts_in_one_day:
-            most_workouts_in_one_day = len(daily_workouts)
+        workouts = [workout_template for workout_template in current_program_template.workout_templates if day in workout_template.days]
+        daily_workouts.append(workouts)
+        if len(workouts) > most_workouts_in_one_day:
+            most_workouts_in_one_day = len(workouts)
 
-    new_workout_form = NewWorkoutForm(
-        name="My workout"
-    )
+    workout_layers = []
+    for num in range(most_workouts_in_one_day):
+        workout_layer = []
+        for workouts in daily_workouts:
+            try:
+                new_workout = workouts[num]
+            except IndexError:
+                workout_layer.append(0)
+            else:
+                workout_layer.append(new_workout)
+        workout_layers.append(workout_layer)
+
+    exercise_layers = []
+    for workout_layer in workout_layers:
+        most_exercises_in_layer = 0
+        for element in workout_layer:
+            if isinstance(element, WorkoutTemplate):
+                if len(element.exercise_templates) > most_exercises_in_layer:
+                    most_exercises_in_layer = len(element.exercise_templates)
+
+        exercise_layer = []
+        for row_number in range(most_exercises_in_layer):
+            row = []
+            for day_number in range(7):
+                element = workout_layer[day_number]
+                if isinstance(element, WorkoutTemplate):
+                    try:
+                        new_exercise = element.exercise_templates[row_number]
+                    except IndexError:
+                        row.append(0)
+                    else:
+                        row.append(f"{new_exercise.type} {len(new_exercise.set_templates)} x {new_exercise.set_templates[0].reps}")
+                else:
+                    row.append(0)
+            exercise_layer.append(row)
+        exercise_layers.append(exercise_layer)
+
+    # FORM FUNCTIONALITY
+
+    new_workout_form = NewWorkoutForm()
     if new_workout_form.validate_on_submit():
+        print(workout_layers)
+        print(exercise_layers)
+
         day_ids = new_workout_form.days.data
         selected_days = [Day.query.get(day_id) for day_id in day_ids]
         new_workout_template = WorkoutTemplate(
@@ -322,14 +375,8 @@ def show_program_template(program_template_id):
     return render_template("show-program-template.html",
                            form=new_workout_form,
                            template=current_program_template,
-                           rows=most_workouts_in_one_day,
-                           monday_workouts=weekly_workouts[0],
-                           tuesday_workouts=weekly_workouts[1],
-                           wednesday_workouts=weekly_workouts[2],
-                           thursday_workouts=weekly_workouts[3],
-                           friday_workouts=weekly_workouts[4],
-                           saturday_workouts=weekly_workouts[5],
-                           sunday_workouts=weekly_workouts[6]
+                           workout_layers=workout_layers,
+                           exercise_layers=exercise_layers
                            )
 
 
@@ -359,20 +406,16 @@ def show_workout_template(workout_template_id):
     return render_template("show-workout-template.html", workout=current_workout_template, form=add_exercise_form)
 
 
-@app.route("/programs/<int:program_id>/week/<int:week>")
+@app.route("/programs/<int:program_id>/week/<int:week>", methods=["GET", "POST"])
 @protect_program_week
 def show_program(program_id, week):
+
+    # TABLE HEAD DATA
+
     current_program = Program.query.get(program_id)
 
-    most_workouts_in_one_day = 0
-    weekly_workouts = []
-    for day in range(7):
-        daily_workouts = [workout for workout in current_program.workouts if workout.week == week and workout.date.weekday() == day]
-        if len(daily_workouts) > most_workouts_in_one_day:
-            most_workouts_in_one_day = len(daily_workouts)
-        weekly_workouts.append(daily_workouts)
-
-    earliest_workout = Workout.query.filter(Workout.parent_program == current_program, Workout.week == week).group_by(Workout.date).first()
+    earliest_workout = Workout.query.filter(Workout.parent_program == current_program, Workout.week == week).group_by(
+        Workout.date).first()
 
     first_day_of_week = earliest_workout.date
     while first_day_of_week.weekday() != 0:
@@ -380,19 +423,61 @@ def show_program(program_id, week):
 
     days_of_the_week = [(first_day_of_week + timedelta(num)).strftime("%a %m/%d/%y") for num in range(7)]
 
+    # TABLE BODY DATA
+
+    most_workouts_in_one_day = 0
+    daily_workouts = []
+    for day in range(7):
+        workouts = [workout for workout in current_program.workouts if workout.week == week and workout.date.weekday() == day]
+        if len(workouts) > most_workouts_in_one_day:
+            most_workouts_in_one_day = len(workouts)
+        daily_workouts.append(workouts)
+
+    workout_layers = []
+    for num in range(most_workouts_in_one_day):
+        workout_layer = []
+        for workouts in daily_workouts:
+            try:
+                new_workout = workouts[num]
+            except IndexError:
+                workout_layer.append(0)
+            else:
+                workout_layer.append(new_workout)
+        workout_layers.append(workout_layer)
+
+    exercise_layers = []
+    for workout_layer in workout_layers:
+        most_exercises_in_layer = 0
+        for element in workout_layer:
+            if isinstance(element, Workout):
+                if len(element.exercises) > most_exercises_in_layer:
+                    most_exercises_in_layer = len(element.exercises)
+
+        exercise_layer = []
+        for row_number in range(most_exercises_in_layer):
+            row = []
+            for day_number in range(7):
+                element = workout_layer[day_number]
+                if isinstance(element, Workout):
+                    try:
+                        new_exercise = element.exercises[row_number]
+                    except IndexError:
+                        row.append(0)
+                    else:
+                        exercise_weights = [set.weight for set in new_exercise.sets]
+                        row.append(f"{new_exercise.type} {max(exercise_weights)} lbs. (max)")
+                else:
+                    row.append(0)
+            exercise_layer.append(row)
+        exercise_layers.append(exercise_layer)
+
     return render_template("show-program.html",
                            days_of_the_week=days_of_the_week,
                            program=current_program,
-                           number_of_rows=most_workouts_in_one_day,
-                           monday_workouts=weekly_workouts[0],
-                           tuesday_workouts=weekly_workouts[1],
-                           wednesday_workouts=weekly_workouts[2],
-                           thursday_workouts=weekly_workouts[3],
-                           friday_workouts=weekly_workouts[4],
-                           saturday_workouts=weekly_workouts[5],
-                           sunday_workouts=weekly_workouts[6],
+                           weeks=current_program.weeks,
                            current_week=week,
-                           weeks=current_program.weeks
+                           workout_layers=workout_layers,
+                           exercise_layers=exercise_layers
                            )
 
 
@@ -513,8 +598,6 @@ def make_program(program_template_id):
         value.name = exercises[count]
 
     if make_program_form.validate_on_submit():
-        print(make_program_form.starting_date.data)
-        print(type(make_program_form.starting_date.data))
         starting_weights = {entry.name: entry.starting_weight.data for entry in make_program_form.exercises}
         increments = {entry.name: entry.increment.data for entry in make_program_form.exercises}
         dummy_program = brain.make_dummy_program(

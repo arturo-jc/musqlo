@@ -1,10 +1,17 @@
-{% include "header.html" %}
+{% extends 'bootstrap/base.html' %}
 {% import "bootstrap/wtf.html" as wtf %}
-<div class="container">
 
-    <h1>Program maker</h1>
-        <p><a href="{{url_for('show_program', program_id=workout.parent_program.id, week=workout.week)}}"> << All workouts</a></p>
-    <h2>{{ workout.name }}</h2>
+{% block content %}
+{% include "header.html" %}
+
+<ol class="breadcrumb">
+  <li><a href="{{url_for('dashboard')}}">Programs</a></li>
+ <li><a href="{{url_for('show_program', program_id=workout.parent_program.id, week=workout.week)}}">{{workout.parent_program.name}}</a></li>
+  <li class="active">{{ workout.name }}</li>
+</ol>
+
+<div class="card">
+    <h2 class="card-title">{{ workout.name }}</h2>
     <table class="table table-striped">
         {% for exercise in workout.exercises: %}
             <thead>
@@ -25,8 +32,10 @@
             </tbody>
         {% endfor %}
     </table>
-    <h3>Delete workout</h3>
-    <a class="btn btn-danger" href="{{url_for('delete_workout', workout_id=workout.id, week=workout.week)}}">Delete</a>
+</div>
 
+<div class="text-center">
+    <a class="btn btn-lg btn-danger" href="{{url_for('delete_workout', workout_id=workout.id, week=workout.week)}}">Delete workout</a>
 </div>
 {% include "footer.html" %}
+{% endblock %}

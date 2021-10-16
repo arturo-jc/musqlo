@@ -1,13 +1,19 @@
+{% extends 'bootstrap/base.html' %}
+
+{% block content %}
 {% include "header.html" %}
-{% import "bootstrap/wtf.html" as wtf %}
-<div class="container">
 
-    <h1>Program maker</h1>
-    <p><a href="{{url_for('dashboard')}}"> << All programs</a></p>
-    <h2>{{program.name}}</h2>
+
+<ol class="breadcrumb">
+  <li><a href="{{url_for('dashboard')}}">Programs</a></li>
+  <li class="active">{{program.name}}</li>
+</ol>
+
+<div class="card">
+    <h2 class="card-title">{{ program.name }}</h2>
     <h3>Week {{ current_week }} of {{ weeks }}</h3>
-
-    <table class="table">
+    <div class="table-responsive">
+    <table class="table table-striped">
         <thead>
             <tr>
                 {% for day in days_of_the_week: %}
@@ -16,53 +22,45 @@
             </tr>
         </thead>
         <tbody>
-        {% set weekly_workouts = [monday_workouts, tuesday_workouts, wednesday_workouts, thursday_workouts, friday_workouts, saturday_workouts, sunday_workouts] %}
-        {% for row in range(number_of_rows): %}
+        {% for n in range(workout_layers|length):%}
             <tr>
-                {% for workouts in weekly_workouts: %}
-                    {% if workouts and row < workouts|count %}
-                        <td class="no-padding-please">
-                            <table class="table table-striped no-bottom-margin">
-                                <thead>
-                                    <tr>
-                                        <th><a href="{{ url_for('show_workout', workout_id=workouts[row].id) }}">{{ workouts[row].name}}</a></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for exercise in workouts[row].exercises: %}
-                                        {% set weights = [] %}
-                                        {% for set in exercise.sets: %}
-                                            {% do weights.append(set.weight) %}
-                                        {% endfor %}
-                                        <tr>
-                                            <td>{{exercise.type}} x {{exercise.sets|count}} x {{weights | max }} lbs. (max)</td>
-                                        </tr>
-                                    {% endfor %}
-                                </tbody>
-
-                            </table>
-                        </td>
-                    {% else %}
-                        <td class="no-padding-please"></td>
+                {% for element in workout_layers[n]: %}
+                    {% if element is integer: %}
+                        <td></td>
+                    {% else: %}
+                        <td><a href=" {{ url_for('show_workout', workout_id=element.id) }}"><b>{{element.name}}</b></a></td>
                     {% endif %}
                 {% endfor %}
             </tr>
+
+            {% for row in exercise_layers[n]:%}
+                <tr>
+                    {% for cell in row %}
+                         {% if cell is integer: %}
+                            <td></td>
+                        {% else: %}
+                            <td>{{cell}}</td>
+                        {% endif %}
+                    {% endfor %}
+                </tr>
+            {% endfor %}
         {% endfor %}
         </tbody>
     </table>
-
-    <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
-
-      <div class="btn-group mr-2" role="group" aria-label="First group">
-        {% for week in range(1, (weeks + 1)): %}
-            <a type="button" class="btn btn-secondary" href="{{url_for('show_program', program_id=program.id, week=week)}}">{{ week }}</a>
-        {% endfor %}
-      </div>
-
     </div>
 
-    <h3>Delete</h3>
-    <a class="btn btn-danger" href="{{url_for('delete_program', program_id=program.id)}}">Delete</a>
-
+    <nav aria-label="Pagination">
+      <ul class="pagination">
+        {% for week in range(1, (weeks + 1)): %}
+          <li class="page-item"><a class="page-link" href="{{url_for('show_program', program_id=program.id, week=week)}}">{{ week }}</a></li>
+        {% endfor %}
+      </ul>
+    </nav>
 </div>
+
+<div class="text-center">
+    <a href="{{url_for('delete_program', program_id=program.id)}}" class="btn btn-danger btn-lg" role="button">Delete program</a>
+</div>
+
 {% include "footer.html" %}
+{% endblock %}

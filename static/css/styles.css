@@ -1,8 +1,112 @@
-.table > tbody > tr> .no-padding-please {border-top: 0; padding:0;}
+body {
+    background-color: #F9F3F3;
+    }
 
-td> .no-bottom-margin {margin-bottom: 0;}
+.container-fluid {
+    padding: 1% 12%;
+    }
 
-.edit-text {
-font-size: 12px;
-font-weight: normal;
+.card {
+    background-color: #FFFFFF;
+    border-radius: 5px;
+    box-shadow: 0px 0 30px rgba(112, 1, 20, 0.1);
+    padding: 0 20px 30px;
+    margin-bottom: 30px;
+}
+
+.user-card {
+    position: relative;
+    background-color: #FFFFFF;
+    border-radius: 5px;
+    box-shadow: 0px 0 30px rgba(112, 1, 20, 0.1);
+    padding: 0 20px 30px;
+    margin: 0 30% 5% 30%;
+}
+
+.breadcrumb {
+    background-color: #FFFFFF;
+    box-shadow: 0px 0 30px rgba(112, 1, 20, 0.1);
+    margin-bottom: 30px;
+}
+
+.card-title {
+    padding: 20px 0 15px;
+    margin: 0 0 8px 0;
+}
+
+.col-lg-6 {
+    padding: 0 12px;
+}
+
+.navbar-collapse {
+    box-shadow: 0px 0 30px rgba(112, 1, 20, 0.1);
+}
+
+.navbar-header {
+    box-shadow: 0px 0 30px rgba(112, 1, 20, 0.1);
+}
+
+form th {
+    padding-top: 20px;
+    padding-right: 30px;
+}
+
+form td {
+    padding-left: 30px;
+}
+
+/* Schedule formatting */
+
+.table > tbody > tr> .no-pad {
+    border-top: 0;
+    padding:0;
+    }
+
+.no-bottom-margin {
+    margin-bottom: 0;
+    }
+
+.squared-right {
+    border-bottom-right-radius: 0;
+    border-top-right-radius: 0;
+}
+
+/* Bootstrap sign in box */
+
+.form-signin {
+  width: 100%;
+  max-width: 330px;
+  padding: 15px;
+  margin: 0 auto;
+}
+
+.form-signin .form-control {
+  position: relative;
+  box-sizing: border-box;
+  height: auto;
+  padding: 10px;
+  font-size: 16px;
+}
+.form-signin .form-control:focus {
+  z-index: 2;
+}
+.form-signin .squared-bottom {
+  margin-bottom: -1px;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.form-signin .squared-top-bottom {
+  margin-bottom: -1px;
+  margin-top: -1px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.form-signin .squared-top {
+  margin-bottom: 10px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
 }

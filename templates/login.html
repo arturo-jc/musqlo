@@ -1,9 +1,7 @@
+{% extends 'bootstrap/base.html' %}
+{% block content %}
 {% include "header.html" %}
-{% import "bootstrap/wtf.html" as wtf %}
-<div class="container">
 
-    <h1>Program maker</h1>
-    <h2>Log in</h2>
     {% with messages = get_flashed_messages() %}
         {% if messages %}
             {% for message in messages %}
@@ -11,9 +9,17 @@
             {% endfor %}
         {% endif %}
     {% endwith %}
-    {{ wtf.quick_form(form, novalidate=True, button_map={"login": "primary"}) }}
 
+    <div class="container-fluid text-center">
+    <form action="" method="post" role="form" class="form-signin">
+        <h1 class="h3 mb-3 font-weight-normal">Log in</h1>
+        {{ form.hidden_tag() }}
+        {{ form.email(class_="form-control squared-bottom", placeholder="Email address") }}
+        {{ form.password(class_="form-control squared-top", placeholder="Password") }}
+        {{ form.login(class_="btn btn-lg btn-primary btn-block") }}
+    </form>
     <p>New? <a href="{{ url_for('register') }}">Register here</a></p>
+    </div>
 
-</div>
 {% include "footer.html" %}
+{% endblock %}

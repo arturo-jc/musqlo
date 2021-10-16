@@ -1,77 +1,93 @@
+{% extends 'bootstrap/base.html' %}
+
+{% block content %}
 {% include "header.html" %}
-{% import "bootstrap/wtf.html" as wtf %}
 
-<div class="container">
+<ol class="breadcrumb">
+  <li><a href="{{url_for('dashboard')}}">Templates</a></li>
+  <li class="active">{{ template.name }}</li>
+</ol>
 
-    <h1>Program maker</h1>
-    <p><a href="{{url_for('dashboard')}}"> << All templates</a></p>
-    <h2>{{ template.name }}</h2>
-
-    <table class="table">
+<div class="card">
+    <h2 class="card-title">{{ template.name }}</h2>
+    <div class="table-responsive">
+    <table class="table table-striped">
         <thead>
             <tr>
-                <th>Monday</th>
-                <th>Tuesday</th>
-                <th>Wednesday</th>
-                <th>Thursday</th>
-                <th>Friday</th>
-                <th>Saturday</th>
-                <th>Sunday</th>
+                <th>Mon</th>
+                <th>Tue</th>
+                <th>Wed</th>
+                <th>Thu</th>
+                <th>Fri</th>
+                <th>Sat</th>
+                <th>Sun</th>
             </tr>
         </thead>
         <tbody>
-        {% set weekly_workouts = [monday_workouts, tuesday_workouts, wednesday_workouts, thursday_workouts, friday_workouts, saturday_workouts, sunday_workouts] %}
-        {% for row in range(rows): %}
+        {% for n in range(workout_layers|length):%}
             <tr>
-                {% for workouts in weekly_workouts: %}
-                    {% if workouts and row < workouts|count %}
-                        <td class="no-padding-please">
-                            <table class="table table-striped no-bottom-margin">
-                                <thead>
-                                    <tr>
-                                        <th><a href=" {{ url_for('show_workout_template', workout_template_id=workouts[row].id) }}">{{ workouts[row].name }}</a></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for exercise in workouts[row].exercise_templates: %}
-                                        <tr>
-                                            <td>{{exercise.type}} x {{exercise.set_templates|count}}</td>
-                                        </tr>
-                                    {% endfor %}
-                                </tbody>
-
-                            </table>
-                        </td>
-                    {% else %}
-                        <td class="no-padding-please"></td>
+                {% for element in workout_layers[n]: %}
+                    {% if element is integer: %}
+                        <td></td>
+                    {% else: %}
+                        <td><a href=" {{ url_for('show_workout_template', workout_template_id=element.id) }}"><b>{{element.name}}</b></a></td>
                     {% endif %}
                 {% endfor %}
             </tr>
+
+            {% for row in exercise_layers[n]:%}
+                <tr>
+                    {% for cell in row %}
+                         {% if cell is integer: %}
+                            <td></td>
+                        {% else: %}
+                            <td>{{cell}}</td>
+                        {% endif %}
+                    {% endfor %}
+                </tr>
+            {% endfor %}
         {% endfor %}
         </tbody>
     </table>
+    </div>
+</div>
 
-    <h3>Add new workout</h3>
 
-    <form action="" method="post" role="form">
-        {{ form.hidden_tag() }}
-        {{ form.name.label }} {{ form.name }}
-        </br>
-                {% for choice in form.days %}
+    <div class="row">
 
+        <div class="col-lg-6">
+            <div class="card">
+                 <h2 class="card-title">Add new workout</h2>
+                    <form action="" method="post" role="form">
+                    {{ form.hidden_tag() }}
+                    <p>Check all that apply:</p>
+                    {% for choice in form.days %}
                         {{ choice(class="form-check-input") }}
                         {{ choice.label(class="form-check-label") }}
+                        </br>
+                    {% endfor %}
+                    </br>
+                    <div class="input-group">
+                        <span class="input-group-btn">
+                        {{ form.add(class_="btn btn-primary") }}
+                        </span>
+                        {{ form.name(class_="form-control", placeholder="Workouts's name") }}
+                    </div>
+                    </form>
+            </div><!--end card -->
+        </div><!--end col -->
 
-                {% endfor %}
-        </br>
-        {{ form.add(class_="btn btn-primary") }}
-    </form>
+        <div class="col-lg-6">
+            <div class="card">
+                <h2 class="card-title">Make program</h2>
+                <p>Generate a program based on this template.</p>
+                <a class="btn btn-primary" href="{{url_for('make_program', program_template_id=template.id)}}">Make</a>
+            </div><!--end card -->
+        </div><!--end col -->
 
-
-    <h3>Make program</h3>
-    <p>Generate a program based on this template.</p>
-    <a class="btn btn-primary" href="{{url_for('make_program', program_template_id=template.id)}}">Make</a>
-    <h3>Delete</h3>
-    <a class="btn btn-danger" href="{{url_for('delete_program_template', program_template_id=template.id)}}">Delete</a>
-</div>
+    </div><!--end row -->
+    <div class="text-center">
+        <a href="{{url_for('delete_program_template', program_template_id=template.id)}}" class="btn btn-danger btn-lg" role="button">Delete template</a>
+    </div>
 {% include "footer.html" %}
+{% endblock %}

@@ -1,24 +1,40 @@
+{% extends 'bootstrap/base.html' %}
+
+{% block content %}
 {% include "header.html" %}
-<div class="container">
 
-    <h1>Program maker</h1>
-    <h2>Make program</h2>
 
-<form action="" method="post" role="form">
-    {{ form.hidden_tag() }}
-        {{ form.name.label }} {{ form.name }}
-    <h3>Set dates</h3>
-    {{ form.starting_date.label }} {{ form.starting_date }}
-    </br>
-    {{ form.weeks.label }} {{ form.weeks }}
-    <h3>Set starting weights and increments</h3>
-    {% for nested in form.exercises %}
-        {{ nested.label }}{{ nested }}
-    {% endfor %}
-    {{ form.make(class_="btn btn-primary") }}
-    </br>
 
-</form>
 
+
+    <form action="" method="post" role="form">
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="card">
+                <h2 class="card-title">Make program</h2>
+                {{ form.hidden_tag() }}
+                {{ form.name.label }} {{ form.name(class_="form-control") }}
+                </br>
+                {{ form.starting_date.label }} {{ form.starting_date(class_="form-control") }}
+                </br>
+                {{ form.weeks.label }} {{ form.weeks(class_="form-control") }}
+            </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="card">
+                <h2 class="card-title">Starting weights</h2>
+                {% for nested in form.exercises %}
+                    {{ nested.label }}
+                    {{ nested }}
+                    </br>
+                {% endfor %}
+                {{ form.make(class_="btn btn-primary") }}
+                </br>
+                </div>
+            </div>
+        </div>
+    </form>
 </div>
+
 {% include "footer.html" %}
+{% endblock %}
