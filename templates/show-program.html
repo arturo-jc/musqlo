@@ -13,7 +13,7 @@
     <h2 class="card-title">{{ program.name }}</h2>
     <h3>Week {{ current_week }} of {{ weeks }}</h3>
     <div class="table-responsive">
-    <table class="table table-striped">
+    <table class="table">
         <thead>
             <tr>
                 {% for day in days_of_the_week: %}
@@ -52,7 +52,11 @@
     <nav aria-label="Pagination">
       <ul class="pagination">
         {% for week in range(1, (weeks + 1)): %}
-          <li class="page-item"><a class="page-link" href="{{url_for('show_program', program_id=program.id, week=week)}}">{{ week }}</a></li>
+          {% if week == current_week %}
+            <li class="page-item active"><a class="page-link" href="{{url_for('show_program', program_id=program.id, week=week)}}">{{ week }}</a></li>
+          {% else: %}
+            <li class="page-item"><a class="page-link" href="{{url_for('show_program', program_id=program.id, week=week)}}">{{ week }}</a></li>
+          {% endif %}
         {% endfor %}
       </ul>
     </nav>

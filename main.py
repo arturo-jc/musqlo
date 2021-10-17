@@ -221,7 +221,20 @@ def protect_workout_week(f):
 def home():
     if current_user.is_authenticated:
         return redirect(url_for('dashboard'))
-    return render_template("index.html")
+    login_form = LoginForm()
+    if login_form.validate_on_submit():
+        user = User.query.filter_by(email=login_form.email.data).first()
+
+        if not user:
+            flash("That email does not exist, please try again.")
+            return redirect(url_for('home'))
+        elif not check_password_hash(user.password, login_form.password.data):
+            flash('Password incorrect, please try again.')
+            return redirect(url_for('home'))
+        else:
+            login_user(user)
+            return redirect(url_for('dashboard'))
+    return render_template("index.html", form=login_form)
 
 @app.route("/user")
 def user():
@@ -230,25 +243,6 @@ def user():
 
 # LOGIN/LOG OUT
 
-
-@app.route("/login", methods=["GET", "POST"])
-def login():
-    login_form = LoginForm()
-    if login_form.validate_on_submit():
-        user = User.query.filter_by(email=login_form.email.data).first()
-
-        if not user:
-            flash("That email does not exist, please try again.")
-            return redirect(url_for('login'))
-        elif not check_password_hash(user.password, login_form.password.data):
-            flash('Password incorrect, please try again.')
-            return redirect(url_for('login'))
-        else:
-            login_user(user)
-            return redirect(url_for('dashboard'))
-    return render_template("login.html", form=login_form)
-
-
 @app.route("/register", methods=["GET", "POST"])
 def register():
     register_form = RegisterForm()
@@ -256,7 +250,7 @@ def register():
         if User.query.filter_by(email=register_form.email.data).first():
             print(User.query.filter_by(email=register_form.email.data).first())
             flash("You've already signed up with that email, log in instead!")
-            return redirect(url_for('login'))
+            return redirect(url_for('home', _anchor="login"))
 
         hash_and_salted_password = generate_password_hash(
             register_form.password.data,
@@ -288,8 +282,8 @@ def logout():
 @app.route("/dashboard", methods=["GET", "POST"])
 @login_required
 def dashboard():
-    all_templates = ProgramTemplate.query.filter(ProgramTemplate.user_id == current_user.id)
-    all_programs = Program.query.filter(Program.user_id == current_user.id)
+    all_templates = ProgramTemplate.query.filter(ProgramTemplate.user_id == current_user.id).all()
+    all_programs = Program.query.filter(Program.user_id == current_user.id).all()
     new_program_form = NewProgramForm()
     if new_program_form.validate_on_submit():
         new_program_template = ProgramTemplate(
@@ -638,7 +632,7 @@ def make_program(program_template_id):
                     db.session.add(new_set)
         db.session.commit()
         return redirect(url_for('show_program', program_id=new_program.id, week=1))
-    return render_template("make-program.html", form=make_program_form)
+    return render_template("make-program.html", form=make_program_form, template_id=program_template_id)
 
 
 if __name__ == "__main__":

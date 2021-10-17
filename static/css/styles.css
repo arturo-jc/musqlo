@@ -1,35 +1,100 @@
 body {
-    background-color: #F9F3F3;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.5rem;
+    color: #819ab1;
+    background: linear-gradient(to bottom right, #080d11, #121d26) fixed;
     }
+
+.navbar.no-padding {
+    margin-bottom: 0;
+}
+
+p a {
+    color: #61819e;
+    text-decoration: underline;
+}
+
+p a:hover {
+    color: #445a6f
+}
+
+label {
+    font-weight: 400;
+}
 
 .container-fluid {
     padding: 1% 12%;
     }
 
+.container-fluid.login-container {
+    padding: 4% 12%;
+    min-height: 450px;
+    }
+
+
+.big-heading {
+    position: absolute;
+    width: 450px;
+    top: 22%;
+    left: 8%;
+}
+
+.big-heading h1 {
+    font-size: 4.8rem;
+    line-height: 1.5;
+    font-family: 'Anton', sans-serif;
+    color: #d5d9dd;
+}
+
+.flash{
+    color: red;
+}
+
 .card {
-    background-color: #FFFFFF;
+    background-color: #1d2830;
     border-radius: 5px;
-    box-shadow: 0px 0 30px rgba(112, 1, 20, 0.1);
+    box-shadow: 0px 0 30px rgba(8, 13, 17, 0.5);
     padding: 0 20px 30px;
     margin-bottom: 30px;
 }
 
 .user-card {
     position: relative;
-    background-color: #FFFFFF;
+    background-color: #1d2830;
     border-radius: 5px;
-    box-shadow: 0px 0 30px rgba(112, 1, 20, 0.1);
+    box-shadow: 0px 0 30px rgba(8, 13, 17, 0.5);
     padding: 0 20px 30px;
     margin: 0 30% 5% 30%;
 }
 
 .breadcrumb {
-    background-color: #FFFFFF;
-    box-shadow: 0px 0 30px rgba(112, 1, 20, 0.1);
+
+    background-color: #2b343b;
+    box-shadow: 0px 0 30px rgba(8, 13, 17, 0.5);
     margin-bottom: 30px;
 }
 
+
+
+.breadcrumb > .active {
+    font-family: 'Montserrat', sans-serif;
+    color: #819ab1;
+}
+
+.breadcrumb a {
+    color: #61819e;
+    text-decoration: underline;
+}
+
+.breadcrumb a:hover {
+    color: #445a6f
+}
+
+
 .card-title {
+    font-family: 'Cairo', sans-serif;
+    font-size: 3rem;
+    color: #df4020;
     padding: 20px 0 15px;
     margin: 0 0 8px 0;
 }
@@ -39,11 +104,48 @@ body {
 }
 
 .navbar-collapse {
-    box-shadow: 0px 0 30px rgba(112, 1, 20, 0.1);
+    font-family: 'Montserrat', sans-serif;
+    background-color: #1d2830;
+    box-shadow: 0px 0 30px rgba(8, 13, 17, 0.5);
+}
+
+.navbar-collapse a {
+    color: #61819e;
 }
 
 .navbar-header {
-    box-shadow: 0px 0 30px rgba(112, 1, 20, 0.1);
+    font-family: 'Montserrat', sans-serif;
+    background-color: #1d2830;
+    box-shadow: 0px 0 30px rgba(8, 13, 17, 0.5);
+}
+
+.navbar-header a{
+    color: #61819e;
+}
+
+.navbar_header a:hover {
+    background-color: #1d2830;
+}
+
+.navbar-inverted .navbar-nav > li > a:hover,
+.navbar-inverted .navbar-nav > li > a:focus{
+    background-color: #151a1e;
+    color: #61819e;
+}
+
+.navbar-inverted > .navbar-header > .navbar-brand{
+    font-family: 'Bebas Neue', cursive;
+    color: #ad361f;
+    font-size: 2.5em;
+}
+
+.navbar-inverted > .navbar-header > .navbar-brand:hover {
+    background-color: #151a1e;
+    color: #df4020;
+}
+
+.navbar-inverted > .navbar-header > .navbar-toggle:hover {
+    background-color: #151a1e;
 }
 
 form th {
@@ -55,20 +157,67 @@ form td {
     padding-left: 30px;
 }
 
+
+.table tr:nth-child(even) td{
+    background-color: #1a2126;
+    }
+
+.table > thead > tr > th {
+    background-color: #1a2126;
+    border-bottom: 2px solid #404e59;
+    border-top: 0;
+}
+
+.table > tbody > tr > td {
+    border-color: #404e59;
+}
+
 /* Schedule formatting */
 
-.table > tbody > tr> .no-pad {
-    border-top: 0;
-    padding:0;
-    }
+.table a {
+    color: #ad361f;
+    text-decoration: underline;
+}
 
-.no-bottom-margin {
-    margin-bottom: 0;
-    }
+.table a:hover {
+    color: #df4020
+}
+
+.pagination > li > a{
+    color: #61819e;
+    background-color: #1a2126;
+    border: 1px solid #404e59;
+}
+
+.pagination > li > a:focus,
+.pagination > li > a:hover,
+.pagination > li > span:focus,
+.pagination > li > span:hover{
+    color: #61819e;
+    background-color: #151a1e;
+    border: 1px solid #404e59;
+}
 
 .squared-right {
     border-bottom-right-radius: 0;
     border-top-right-radius: 0;
+}
+
+.form-control {
+    color: #819ab1;
+    background-color: #2b343b;
+    border: 0;
+    box-shadow: 0px 0 30px rgba(8, 13, 17, 0.5);
+}
+
+.form-control:hover {
+    background-color: #36414a;
+}
+
+.starting-weights-card .card-title + label, .custom-divider + label {
+    font-weight: 600;
+    color: #b0c0cf;
+    font-size: 2rem;
 }
 
 /* Bootstrap sign in box */
@@ -110,3 +259,31 @@ form td {
   border-top-left-radius: 0;
   border-top-right-radius: 0;
 }
+
+footer {
+bottom: 0;
+}
+
+}
+footer {
+  position: absolute;
+  bottom: 0;
+}
+
+html, body {height: 100%;}
+#wrap {min-height: 100%;}
+#main {overflow:auto;
+	padding-bottom: 2%;}  /* must be same height as the footer */
+#footer {position: relative;
+	margin-top: -2%; /* negative value of footer height */
+	height: 2%;
+	clear:both;}
+
+.landing {
+    background-image: linear-gradient(to top right, rgba(8, 13, 17, 0.9), rgba(18, 29, 38, 0.12)), url("images/bg.jpg");
+    height: 500px; /* You must set a specified height */
+    background-position: center; /* Center the image */
+    background-repeat: no-repeat; /* Do not repeat the image */
+    background-size: cover; /* Resize the background image to cover the entire container */
+    }
+

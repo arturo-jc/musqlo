@@ -3,10 +3,6 @@
 {% block content %}
 {% include "header.html" %}
 
-
-
-
-
     <form action="" method="post" role="form">
         <div class="row">
             <div class="col-lg-6">
@@ -21,20 +17,26 @@
             </div>
             </div>
             <div class="col-lg-6">
-                <div class="card">
+                <div class="card starting-weights-card">
                 <h2 class="card-title">Starting weights</h2>
                 {% for nested in form.exercises %}
                     {{ nested.label }}
                     {{ nested }}
-                    </br>
+                    <br class="custom-divider">
                 {% endfor %}
                 {{ form.make(class_="btn btn-primary") }}
                 </br>
-                </div>
+                </br>
             </div>
         </div>
     </form>
 </div>
+
+
+<div class="text-center">
+    <a href="{{url_for('show_program_template', program_template_id=template_id)}}" class="btn btn-danger btn-lg" role="button">Cancel</a>
+</div>
+
 
 {% include "footer.html" %}
 {% endblock %}
