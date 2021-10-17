@@ -3,6 +3,7 @@ from wtforms import StringField, SubmitField, PasswordField, IntegerField, Selec
 from wtforms.widgets import ListWidget, CheckboxInput
 from wtforms.fields.html5 import DateField
 from wtforms.validators import DataRequired
+from exercises import exercises
 
 
 class LoginForm(FlaskForm):
@@ -46,7 +47,7 @@ class NewWorkoutForm(FlaskForm):
 
 
 class AddExerciseForm(FlaskForm):
-    type = SelectField("Exercise type", choices=["Deadlift", "Bench press", "Overhead press"])
+    type = SelectField("Exercise", choices=exercises)
     sets = IntegerField("Sets", validators=[DataRequired()])
     reps_per_set = IntegerField("Reps per set", validators=[DataRequired()])
     add = SubmitField("Add exercise")

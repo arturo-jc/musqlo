@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, url_for, flash, abort
+from flask import Flask, render_template, redirect, url_for, flash, abort, jsonify
 from flask_bootstrap import Bootstrap
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin, login_user, LoginManager, login_required, current_user, logout_user
@@ -30,7 +30,10 @@ login_manager.init_app(app)
 
 @login_manager.user_loader
 def load_user(user_id):
-    return User.query.get(int(user_id))
+    try:
+        return User.query.get(int(user_id))
+    except ValueError:
+        return None
 
 
 # CONFIGURE TABLE
@@ -227,10 +230,10 @@ def home():
 
         if not user:
             flash("That email does not exist, please try again.")
-            return redirect(url_for('home'))
+            return redirect(url_for('home', _anchor="login"))
         elif not check_password_hash(user.password, login_form.password.data):
             flash('Password incorrect, please try again.')
-            return redirect(url_for('home'))
+            return redirect(url_for('home', _anchor="login"))
         else:
             login_user(user)
             return redirect(url_for('dashboard'))
@@ -248,7 +251,6 @@ def register():
     register_form = RegisterForm()
     if register_form.validate_on_submit():
         if User.query.filter_by(email=register_form.email.data).first():
-            print(User.query.filter_by(email=register_form.email.data).first())
             flash("You've already signed up with that email, log in instead!")
             return redirect(url_for('home', _anchor="login"))
 
@@ -353,8 +355,6 @@ def show_program_template(program_template_id):
 
     new_workout_form = NewWorkoutForm()
     if new_workout_form.validate_on_submit():
-        print(workout_layers)
-        print(exercise_layers)
 
         day_ids = new_workout_form.days.data
         selected_days = [Day.query.get(day_id) for day_id in day_ids]
@@ -398,7 +398,6 @@ def show_workout_template(workout_template_id):
 
         return redirect(url_for("show_workout_template", workout_template_id=current_workout_template.id))
     return render_template("show-workout-template.html", workout=current_workout_template, form=add_exercise_form)
-
 
 @app.route("/programs/<int:program_id>/week/<int:week>", methods=["GET", "POST"])
 @protect_program_week
@@ -565,7 +564,7 @@ def delete_user():
     db.session.delete(current_user)
     db.session.commit()
     flash("Account deleted.")
-    return redirect(url_for('login'))
+    return redirect(url_for('home', _anchor="login"))
 
 
 # MAKE PROGRAM

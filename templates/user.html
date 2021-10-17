@@ -9,8 +9,11 @@
         <p>Email: {{current_user.email}}</p>
 </div>
 
-<div class="text-center">
-        <a class="btn btn-lg btn-danger" href="{{url_for('delete_user')}}">Delete account</a>
-</div>
+{% if current_user.id != 2 %}
+        <div class="text-center">
+                <a class="btn btn-lg btn-danger" href="{{url_for('delete_user')}}">Delete account</a>
+        </div>
+{% endif %}
+
 {% include "footer.html" %}
 {% endblock %}

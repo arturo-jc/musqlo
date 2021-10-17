@@ -1,13 +1,11 @@
+/* Global theme */
+
 body {
     font-family: 'Montserrat', sans-serif;
     font-size: 1.5rem;
     color: #819ab1;
     background: linear-gradient(to bottom right, #080d11, #121d26) fixed;
     }
-
-.navbar.no-padding {
-    margin-bottom: 0;
-}
 
 p a {
     color: #61819e;
@@ -18,37 +16,11 @@ p a:hover {
     color: #445a6f
 }
 
-label {
-    font-weight: 400;
-}
 
 .container-fluid {
     padding: 1% 12%;
     }
 
-.container-fluid.login-container {
-    padding: 4% 12%;
-    min-height: 450px;
-    }
-
-
-.big-heading {
-    position: absolute;
-    width: 450px;
-    top: 22%;
-    left: 8%;
-}
-
-.big-heading h1 {
-    font-size: 4.8rem;
-    line-height: 1.5;
-    font-family: 'Anton', sans-serif;
-    color: #d5d9dd;
-}
-
-.flash{
-    color: red;
-}
 
 .card {
     background-color: #1d2830;
@@ -74,8 +46,6 @@ label {
     margin-bottom: 30px;
 }
 
-
-
 .breadcrumb > .active {
     font-family: 'Montserrat', sans-serif;
     color: #819ab1;
@@ -97,106 +67,32 @@ label {
     color: #df4020;
     padding: 20px 0 15px;
     margin: 0 0 8px 0;
+    text-shadow: 2px 3px 8px rgba(0, 0, 0, .3);
 }
 
 .col-lg-6 {
     padding: 0 12px;
 }
 
-.navbar-collapse {
-    font-family: 'Montserrat', sans-serif;
-    background-color: #1d2830;
-    box-shadow: 0px 0 30px rgba(8, 13, 17, 0.5);
-}
 
-.navbar-collapse a {
-    color: #61819e;
-}
+/* Forms */
 
-.navbar-header {
-    font-family: 'Montserrat', sans-serif;
-    background-color: #1d2830;
-    box-shadow: 0px 0 30px rgba(8, 13, 17, 0.5);
-}
 
-.navbar-header a{
-    color: #61819e;
-}
-
-.navbar_header a:hover {
-    background-color: #1d2830;
-}
-
-.navbar-inverted .navbar-nav > li > a:hover,
-.navbar-inverted .navbar-nav > li > a:focus{
-    background-color: #151a1e;
-    color: #61819e;
-}
-
-.navbar-inverted > .navbar-header > .navbar-brand{
-    font-family: 'Bebas Neue', cursive;
-    color: #ad361f;
-    font-size: 2.5em;
-}
-
-.navbar-inverted > .navbar-header > .navbar-brand:hover {
-    background-color: #151a1e;
-    color: #df4020;
-}
-
-.navbar-inverted > .navbar-header > .navbar-toggle:hover {
-    background-color: #151a1e;
-}
-
-form th {
-    padding-top: 20px;
-    padding-right: 30px;
-}
-
-form td {
-    padding-left: 30px;
+label {
+    font-weight: 400;
 }
 
 
-.table tr:nth-child(even) td{
-    background-color: #1a2126;
+.container-fluid.login-container {
+    padding: 4% 12%;
+    min-height: 450px;
     }
 
-.table > thead > tr > th {
-    background-color: #1a2126;
-    border-bottom: 2px solid #404e59;
-    border-top: 0;
+
+.flash{
+    color: red;
 }
 
-.table > tbody > tr > td {
-    border-color: #404e59;
-}
-
-/* Schedule formatting */
-
-.table a {
-    color: #ad361f;
-    text-decoration: underline;
-}
-
-.table a:hover {
-    color: #df4020
-}
-
-.pagination > li > a{
-    color: #61819e;
-    background-color: #1a2126;
-    border: 1px solid #404e59;
-}
-
-.pagination > li > a:focus,
-.pagination > li > a:hover,
-.pagination > li > span:focus,
-.pagination > li > span:hover{
-    color: #61819e;
-    background-color: #151a1e;
-    border: 1px solid #404e59;
-}
 
 .squared-right {
     border-bottom-right-radius: 0;
@@ -214,13 +110,25 @@ form td {
     background-color: #36414a;
 }
 
-.starting-weights-card .card-title + label, .custom-divider + label {
+.starting-weights-card .card-title + label, .custom-divider + label { /* Controls labels in make-program.html */
     font-weight: 600;
     color: #b0c0cf;
     font-size: 2rem;
+    text-shadow: 2px 3px 8px rgba(0, 0, 0, .3);
 }
 
+form th {
+    padding-top: 20px;
+    padding-right: 30px;
+}
+
+form td {
+    padding-left: 30px;
+}
+
+
 /* Bootstrap sign in box */
+
 
 .form-signin {
   width: 100%;
@@ -260,24 +168,118 @@ form td {
   border-top-right-radius: 0;
 }
 
-footer {
-bottom: 0;
+/* Nav Bar */
+
+.navbar.no-padding { /* Makes sure there is no space between Nav Bar and index.html background photo */
+    margin-bottom: 0;
 }
 
-}
-footer {
-  position: absolute;
-  bottom: 0;
+.navbar-collapse {
+    font-family: 'Montserrat', sans-serif;
+    background-color: #1d2830;
+    box-shadow: 0px 0 30px rgba(8, 13, 17, 0.5);
 }
 
-html, body {height: 100%;}
-#wrap {min-height: 100%;}
-#main {overflow:auto;
-	padding-bottom: 2%;}  /* must be same height as the footer */
-#footer {position: relative;
-	margin-top: -2%; /* negative value of footer height */
-	height: 2%;
-	clear:both;}
+.navbar-collapse a {
+    color: #61819e;
+}
+
+.navbar-header {
+    font-family: 'Montserrat', sans-serif;
+    background-color: #1d2830;
+    box-shadow: 0px 0 30px rgba(8, 13, 17, 0.5);
+}
+
+.navbar-header a{
+    color: #61819e;
+}
+
+.navbar_header a:hover {
+    background-color: #1d2830;
+}
+
+.navbar-inverted .navbar-nav > li > a:hover,
+.navbar-inverted .navbar-nav > li > a:focus{
+    background-color: #151a1e;
+    color: #61819e;
+}
+
+.navbar-inverted > .navbar-header > .navbar-brand{
+    font-family: 'Bebas Neue', cursive;
+    color: #ad361f;
+    font-size: 2.5em;
+    text-shadow: 1px 1px 5px rgba(0, 0, 0, .7);
+}
+
+.navbar-inverted > .navbar-header > .navbar-brand:hover {
+    background-color: #151a1e;
+    color: #df4020;
+}
+
+.navbar-inverted > .navbar-header > .navbar-toggle:hover {
+    background-color: #151a1e;
+}
+
+
+/* Schedule formatting */
+
+
+.table tr:nth-child(even) td{
+    background-color: #1a2126;
+    }
+
+.table > thead > tr > th {
+    background-color: #1a2126;
+    border-bottom: 2px solid #404e59;
+    border-top: 0;
+}
+
+.table > tbody > tr > td {
+    border-color: #404e59;
+}
+
+.table a {
+    color: #ad361f;
+    text-decoration: underline;
+}
+
+.table a:hover {
+    color: #df4020
+}
+
+.pagination > li > a{
+    color: #61819e;
+    background-color: #1a2126;
+    border: 1px solid #404e59;
+}
+
+.pagination > li > a:focus,
+.pagination > li > a:hover,
+.pagination > li > span:focus,
+.pagination > li > span:hover{
+    color: #61819e;
+    background-color: #151a1e;
+    border: 1px solid #404e59;
+}
+
+
+/* Landing */
+
+
+.big-heading {
+    position: absolute;
+    width: 450px;
+    top: 22%;
+    left: 8%;
+}
+
+.big-heading h1 {
+    font-size: 4.8rem;
+    line-height: 1.5;
+    font-family: 'Anton', sans-serif;
+    color: #d5d9dd;
+    text-shadow: 3px 5px 10px rgba(0, 0, 0, .7);
+}
 
 .landing {
     background-image: linear-gradient(to top right, rgba(8, 13, 17, 0.9), rgba(18, 29, 38, 0.12)), url("images/bg.jpg");
@@ -286,4 +288,18 @@ html, body {height: 100%;}
     background-repeat: no-repeat; /* Do not repeat the image */
     background-size: cover; /* Resize the background image to cover the entire container */
     }
+
+
+/* The following gives Footer desired behavior (credit: https://web.archive.org/web/20141018105554/http://www.cssstickyfooter.com:80/) */
+
+
+html, body {height: 100%;}
+#wrap {min-height: 100%;}
+#main {overflow:auto;
+	padding-bottom: 2%;}  /* must be same height as the footer */
+#footer {position: relative;
+	margin-top: -2%; /* negative value of footer height */
+	height: 2%;
+	clear:both;
+	}
 
