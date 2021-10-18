@@ -30,6 +30,24 @@ p a:hover {
     margin-bottom: 30px;
 }
 
+.card-title {
+    font-family: 'Cairo', sans-serif;
+    font-size: 3rem;
+    color: #df4020;
+    padding: 20px 0 15px;
+    margin: 0 0 8px 0;
+    text-shadow: 2px 3px 8px rgba(0, 0, 0, .3);
+}
+
+.card-subtitle{
+    font-weight: 600;
+    color: #b0c0cf;
+    font-size: 2rem;
+    text-shadow: 2px 3px 8px rgba(0, 0, 0, .3);
+    padding: 20px 0 15px;
+    margin: 0 0 8px 0;
+}
+
 .breadcrumb {
 
     background-color: #2b343b;
@@ -52,14 +70,7 @@ p a:hover {
 }
 
 
-.card-title {
-    font-family: 'Cairo', sans-serif;
-    font-size: 3rem;
-    color: #df4020;
-    padding: 20px 0 15px;
-    margin: 0 0 8px 0;
-    text-shadow: 2px 3px 8px rgba(0, 0, 0, .3);
-}
+
 
 .col-lg-6 {
     padding: 0 12px;
@@ -83,7 +94,6 @@ label {
 .flash{
     color: red;
 }
-
 
 .squared-right {
     border-bottom-right-radius: 0;

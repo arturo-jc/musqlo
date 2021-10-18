@@ -65,5 +65,8 @@ class MakeProgramForm(FlaskForm):
     exercises = FieldList(FormField(SetWeightsForm))
     make = SubmitField("Make program")
 
-class TestForm(FlaskForm):
-    test = SubmitField("Test")
+class ChangePasswordForm(FlaskForm):
+    current_password = PasswordField("Current password", validators=[DataRequired()])
+    reenter = PasswordField("Re-enter", validators=[DataRequired()])
+    new_password = PasswordField("New password")
+    change = SubmitField("Change")

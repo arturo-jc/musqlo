@@ -4,7 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin, login_user, LoginManager, login_required, current_user, logout_user
 from sqlalchemy import Column, Integer, String, ForeignKey, Date, Boolean
 from sqlalchemy.orm import relationship
-from forms import LoginForm, RegisterForm, NewProgramForm, NewWorkoutForm, AddExerciseForm, MakeProgramForm, TestForm
+from forms import LoginForm, RegisterForm, NewProgramForm, NewWorkoutForm, AddExerciseForm, MakeProgramForm, ChangePasswordForm
 from brain import Brain
 from datetime import timedelta
 from wtforms.fields import Label
@@ -243,9 +243,27 @@ def home():
             return redirect(url_for('dashboard'))
     return render_template("index.html", form=login_form)
 
-@app.route("/user")
+@app.route("/user", methods=["POST", "GET"])
 def user():
-    return render_template("user.html")
+    change_password_form = ChangePasswordForm()
+    if change_password_form.validate_on_submit():
+        if change_password_form.current_password.data != change_password_form.reenter.data:
+            flash("Passwords do not match, re-enter your current password and try again.")
+            return redirect(url_for('user'))
+        elif not check_password_hash(current_user.password, change_password_form.current_password.data):
+            flash('Wrong password.')
+            return redirect(url_for('user'))
+        else:
+            hash_and_salted_password = generate_password_hash(
+                change_password_form.new_password.data,
+                method='pbkdf2:sha256',
+                salt_length=8
+            )
+            setattr(current_user, 'password', hash_and_salted_password)
+            db.session.commit()
+            flash('Password successfully changed')
+            return redirect(url_for('user'))
+    return render_template("user.html", form=change_password_form)
 
 
 # LOGIN/LOG OUT
