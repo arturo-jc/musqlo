@@ -411,7 +411,7 @@ def show_program(program_id, week):
 
     current_program = Program.query.get(program_id)
 
-    earliest_workout = Workout.query.filter_by(parent_program=current_program, week=week).group_by(
+    earliest_workout = Workout.query.filter_by(parent_program=current_program, week=week).order_by(
         Workout.date).first()
 
     first_day_of_week = earliest_workout.date
