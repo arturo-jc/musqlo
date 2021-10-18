@@ -151,7 +151,7 @@ class Set(db.Model):
     exercise_id = Column(Integer, ForeignKey("exercises.id"))
     parent_exercise = relationship("Exercise", back_populates="sets")
 
-# # CREATE DB THEN COMMENT OUT
+# # CREATE TABLES THEN COMMENT OUT
 # db.create_all()
 #
 # # POPULATE DAYS TABLE THEN COMMENT OUT
@@ -639,4 +639,4 @@ def make_program(program_template_id):
 
 
 if __name__ == "__main__":
-    app.run()
+    app.run(debug=True)

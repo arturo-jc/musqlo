@@ -18,7 +18,7 @@ p a:hover {
 
 
 .container-fluid {
-    padding: 1% 12%;
+    padding: 1% 7%;
     }
 
 
@@ -28,15 +28,6 @@ p a:hover {
     box-shadow: 0px 0 30px rgba(8, 13, 17, 0.5);
     padding: 0 20px 30px;
     margin-bottom: 30px;
-}
-
-.user-card {
-    position: relative;
-    background-color: #1d2830;
-    border-radius: 5px;
-    box-shadow: 0px 0 30px rgba(8, 13, 17, 0.5);
-    padding: 0 20px 30px;
-    margin: 0 30% 5% 30%;
 }
 
 .breadcrumb {
@@ -84,7 +75,7 @@ label {
 
 
 .container-fluid.login-container {
-    padding: 4% 12%;
+    padding: 4% 7%;
     min-height: 450px;
     }
 
@@ -266,15 +257,15 @@ form td {
 /* Landing */
 
 
-.big-heading {
+.big-heading-div {
     position: absolute;
-    width: 450px;
-    top: 22%;
-    left: 8%;
+    width: 70%;
+    top: 10%;
+    left: 6%;
 }
 
-.big-heading h1 {
-    font-size: 4.8rem;
+.big-heading-div h1 {
+    font-size: 6rem;
     line-height: 1.5;
     font-family: 'Anton', sans-serif;
     color: #d5d9dd;

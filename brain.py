@@ -56,7 +56,7 @@ class Brain:
                         last_day_of_the_week += timedelta(1)
 
                 workout_date = first_day_of_the_week
-                while workout_date != last_day_of_the_week:
+                while workout_date <= last_day_of_the_week:
                     for workout_template in program_template.workout_templates:
                         for day in workout_template.days:
                             if day.id - 1 == workout_date.weekday():
@@ -82,7 +82,7 @@ class Brain:
             last_day_of_the_week = first_day_of_the_week + timedelta(6)
 
             workout_date = first_day_of_the_week
-            while workout_date != last_day_of_the_week:
+            while workout_date <= last_day_of_the_week:
                 for workout_template in program_template.workout_templates:
                     for day in workout_template.days:
                         if day.id - 1 == workout_date.weekday():
