@@ -1,70 +1,68 @@
-{% extends 'bootstrap/base.html' %}
-{% block title %}MUSQLO{% endblock %}
+{% extends "base.html" %}
 {% block content %}
-{% include "header.html" %}
+    <div class="container-fluid">
 
+        <ol class="breadcrumb">
+          <li><a href="{{url_for('dashboard')}}">Programs</a></li>
+          <li class="active">{{program.name}}</li>
+        </ol>
 
-<ol class="breadcrumb">
-  <li><a href="{{url_for('dashboard')}}">Programs</a></li>
-  <li class="active">{{program.name}}</li>
-</ol>
+        <div class="card">
+            <h2 class="card-title">{{ program.name }}</h2>
+            <h3>Week {{ current_week }} of {{ weeks }}</h3>
+            <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        {% for day in days_of_the_week: %}
+                        <th>{{day}}</th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                {% for n in range(workout_layers|length):%}
+                    <tr>
+                        {% for element in workout_layers[n]: %}
+                            {% if element is integer: %}
+                                <td></td>
+                            {% else: %}
+                                <td><a href=" {{ url_for('show_workout', workout_id=element.id) }}"><b>{{element.name}}</b></a></td>
+                            {% endif %}
+                        {% endfor %}
+                    </tr>
 
-<div class="card">
-    <h2 class="card-title">{{ program.name }}</h2>
-    <h3>Week {{ current_week }} of {{ weeks }}</h3>
-    <div class="table-responsive">
-    <table class="table">
-        <thead>
-            <tr>
-                {% for day in days_of_the_week: %}
-                <th>{{day}}</th>
-                {% endfor %}
-            </tr>
-        </thead>
-        <tbody>
-        {% for n in range(workout_layers|length):%}
-            <tr>
-                {% for element in workout_layers[n]: %}
-                    {% if element is integer: %}
-                        <td></td>
-                    {% else: %}
-                        <td><a href=" {{ url_for('show_workout', workout_id=element.id) }}"><b>{{element.name}}</b></a></td>
-                    {% endif %}
-                {% endfor %}
-            </tr>
-
-            {% for row in exercise_layers[n]:%}
-                <tr>
-                    {% for cell in row %}
-                         {% if cell is integer: %}
-                            <td></td>
-                        {% else: %}
-                            <td>{{cell}}</td>
-                        {% endif %}
+                    {% for row in exercise_layers[n]:%}
+                        <tr>
+                            {% for cell in row %}
+                                 {% if cell is integer: %}
+                                    <td></td>
+                                {% else: %}
+                                    <td>{{cell}}</td>
+                                {% endif %}
+                            {% endfor %}
+                        </tr>
                     {% endfor %}
-                </tr>
-            {% endfor %}
-        {% endfor %}
-        </tbody>
-    </table>
-    </div>
+                {% endfor %}
+                </tbody>
+            </table>
+            </div>
 
-    <nav aria-label="Pagination">
-      <ul class="pagination">
-        {% for week in range(1, (weeks + 1)): %}
-          {% if week == current_week %}
-            <li class="page-item active"><a class="page-link" href="{{url_for('show_program', program_id=program.id, week=week)}}">{{ week }}</a></li>
-          {% else: %}
-            <li class="page-item"><a class="page-link" href="{{url_for('show_program', program_id=program.id, week=week)}}">{{ week }}</a></li>
-          {% endif %}
-        {% endfor %}
-      </ul>
-    </nav>
-</div>
+            <nav aria-label="Pagination">
+              <ul class="pagination">
+                {% for week in range(1, (weeks + 1)): %}
+                  {% if week == current_week %}
+                    <li class="page-item active"><a class="page-link" href="{{url_for('show_program', program_id=program.id, week=week)}}">{{ week }}</a></li>
+                  {% else: %}
+                    <li class="page-item"><a class="page-link" href="{{url_for('show_program', program_id=program.id, week=week)}}">{{ week }}</a></li>
+                  {% endif %}
+                {% endfor %}
+              </ul>
+            </nav>
+        </div>
 
-<div class="text-center">
-    <a href="{{url_for('delete_program', program_id=program.id)}}" class="btn btn-danger btn-lg" role="button">Delete program</a>
-</div>
+        <div class="text-center">
+            <a href="{{url_for('delete_program', program_id=program.id)}}" class="btn btn-danger btn-lg" role="button">Delete program</a>
+        </div>
 
-{% include "footer.html" %}
+    </div><!--end container-fluid-->
 {% endblock %}

@@ -1,0 +1,61 @@
+{% extends "bootstrap/base.html" %}
+
+{% block title %}MUSQLO{% endblock %}
+{% block head %}
+{{super()}}
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Cairo&family=Montserrat&family=Bebas+Neue&display=swap" rel="stylesheet">
+
+    <!--  Font Awesome -->
+    <script src="https://kit.fontawesome.com/aebaafdeec.js" crossorigin="anonymous"></script>
+{% endblock %}
+
+{% block styles %}
+{{super()}}
+
+    <!-- Custom styles for this template -->
+    <link href="{{ url_for('static', filename='css/styles.css')}}" rel="stylesheet">
+{% endblock %}
+
+{% block body %}
+    <div id="wrap">
+
+        <!-- Nav Bar -->
+        <nav class="navbar navbar-inverted" role="navigation">
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-links">
+                <span class="sr-only">Toggle navigation</span>
+                <i class="fas fa-bars"></i>
+            </button>
+            <a class="navbar-brand" href="{{url_for('home')}}">MUSQLO</a>
+          </div>
+
+          <div class="collapse navbar-collapse" id="navbar-links">
+              <ul class="nav navbar-nav navbar-right">
+                {% if current_user.is_authenticated: %}
+                    <li><a href="{{url_for('user')}}">{{ current_user.name }}</a></li>
+                    <li><a href="{{url_for('logout')}}">Log out</a></li>
+                {% else: %}
+                    <li><a href="{{ url_for('home',_anchor='login') }}">Log in</a></li>
+                    <li><a href="{{ url_for('register') }}">Register</a></li>
+                {% endif %}
+              </ul>
+          </div>
+        </nav>
+
+        <div id="main">
+
+            {% block content %}
+            {% endblock %}
+
+        </div><!--end main-->
+
+    </div><!--end wrap-->
+
+    <!-- Footer -->
+    <div class="text-center" id="footer">
+        <p>Made by Arturo Javier-Castellanos.</p>
+    </div>
+{% endblock %}

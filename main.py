@@ -424,15 +424,37 @@ def show_workout_template(workout_template_id):
 @app.route("/programs/<int:program_id>/week/<int:week>", methods=["GET", "POST"])
 @protect_program_week
 def show_program(program_id, week):
+    current_program = Program.query.get(program_id)
+
+    # CHECK IF CURRENT_WEEK HAS WORKOUTS
+    earliest_workout_in_week = Workout.query.filter_by(parent_program=current_program, week=week).order_by(
+        Workout.date).first()
+
+    if not earliest_workout_in_week:
+        earliest_workout_in_program = Workout.query.filter_by(parent_program=current_program).order_by(Workout.date).first()
+        if not earliest_workout_in_program:
+            return redirect(url_for('delete_program', program_id=current_program.id))
+        last_workout_in_program = Workout.query.filter_by(parent_program=current_program).order_by(Workout.date.desc()).first()
+        first_week = earliest_workout_in_program.week
+        last_week = last_workout_in_program.week
+
+        # UPDATE WEEKS AND REFRESH
+        current_week = first_week
+        week_update = 1
+        while current_week <= last_week:
+            workouts_in_week = Workout.query.filter_by(parent_program=current_program, week=current_week).all()
+            if workouts_in_week:
+                for workout in workouts_in_week:
+                    setattr(workout, "week", week_update)
+                week_update += 1
+            current_week += 1
+        setattr(current_program, "weeks", current_week - 1)
+        db.session.commit()
+        return redirect(url_for('show_program', program_id=program_id, week=last_week))
 
     # TABLE HEAD DATA
 
-    current_program = Program.query.get(program_id)
-
-    earliest_workout = Workout.query.filter_by(parent_program=current_program, week=week).order_by(
-        Workout.date).first()
-
-    first_day_of_week = earliest_workout.date
+    first_day_of_week = earliest_workout_in_week.date
     while first_day_of_week.weekday() != 0:
         first_day_of_week -= timedelta(1)
 

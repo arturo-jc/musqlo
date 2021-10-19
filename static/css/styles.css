@@ -16,11 +16,10 @@ p a:hover {
     color: #445a6f
 }
 
-
 .container-fluid {
+    margin-top: 20px;
     padding: 1% 7%;
     }
-
 
 .card {
     background-color: #1d2830;
@@ -171,7 +170,7 @@ form td {
 
 /* Nav Bar */
 
-.navbar.no-padding { /* Makes sure there is no space between Nav Bar and index.html background photo */
+.navbar.navbar-inverted  {
     margin-bottom: 0;
 }
 

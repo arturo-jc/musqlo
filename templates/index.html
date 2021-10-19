@@ -1,95 +1,33 @@
-{% extends 'bootstrap/base.html' %}
-{% block title %}MUSQLO{% endblock %}
+{% extends "base.html" %}
 {% block content %}
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>MUSQLO</title>
-
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Cairo&family=Montserrat&family=Bebas+Neue&display=swap" rel="stylesheet">
-
-    <!-- Custom styles for this template -->
-    <link href="{{ url_for('static', filename='css/styles.css')}}" rel="stylesheet">
-
-    <!--  Font Awesome -->
-    <script src="https://kit.fontawesome.com/aebaafdeec.js" crossorigin="anonymous"></script>
-
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-X48K6YEYRT"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-
-      gtag('config', 'G-X48K6YEYRT');
-    </script>
-
-</head>
-<body>
-<div id="wrap">
-<!-- Nav Bar -->
-<nav class="navbar navbar-inverted no-padding" role="navigation">
-  <div class="navbar-header">
-    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-links">
-    <span class="sr-only">Toggle navigation</span>
-    <i class="fas fa-bars"></i>
-    </button>
-    <a class="navbar-brand" href="{{url_for('home')}}">MUSQLO</a>
-  </div>
-
-  <div class="collapse navbar-collapse" id="navbar-links">
-  <ul class="nav navbar-nav navbar-right">
-    <li><a href="#login">Log in</a></li>
-    <li><a href="{{ url_for('register') }}">Register</a></li>
-  </ul>
-
-  </div>
-</nav>
-<div id="main">
 
     <div class="landing">
         <div class="big-heading-div">
             <h1>Create custom programs in just a few clicks</h1>
+        </div>
+    </div>
+
+    <div class="container-fluid login-container">
+
+        <div class="container-fluid text-center" id="login">
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                  {% for message in messages %}
+                   <p class="flash">{{ message }}</p>
+                  {% endfor %}
+                {% endif %}
+            {% endwith %}
+            <form action="" method="post" role="form" class="form-signin">
+                <h1 class="h3 mb-3 font-weight-normal">User login</h1>
+                {{ form.hidden_tag() }}
+                {{ form.email(class_="form-control squared-bottom", placeholder="Email address") }}
+                {{ form.password(class_="form-control squared-top", placeholder="Password") }}
+                {{ form.login(class_="btn btn-lg btn-primary btn-block") }}
+            </form>
+            <p>New? <a href="{{ url_for('register') }}">Register here</a></p>
 
         </div>
 
     </div>
-        <div class="container-fluid login-container">
-
-                <div class="container-fluid text-center" id="login">
-                {% with messages = get_flashed_messages() %}
-                    {% if messages %}
-                      {% for message in messages %}
-                       <p class="flash">{{ message }}</p>
-                      {% endfor %}
-                    {% endif %}
-                {% endwith %}
-                <form action="" method="post" role="form" class="form-signin">
-                    <h1 class="h3 mb-3 font-weight-normal">User login</h1>
-                    {{ form.hidden_tag() }}
-                    {{ form.email(class_="form-control squared-bottom", placeholder="Email address") }}
-                    {{ form.password(class_="form-control squared-top", placeholder="Password") }}
-                    {{ form.login(class_="btn btn-lg btn-primary btn-block") }}
-                </form>
-
-                <p>New? <a href="{{ url_for('register') }}">Register here</a></p>
-
-                </div>
-
-    </div>
-
-</div><!--end main-->
-</div><!--end wrap-->
-<div class="text-center" id="footer">
-	<p>Made by Arturo Javier-Castellanos.</p>
-</div>
-</body>
-
-</html>
 
 {% endblock %}

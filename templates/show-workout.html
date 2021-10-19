@@ -1,40 +1,41 @@
-{% extends 'bootstrap/base.html' %}
-{% block title %}MUSQLO{% endblock %}
+{% extends "base.html" %}
 {% block content %}
-{% include "header.html" %}
+    <div class="container-fluid">
 
-<ol class="breadcrumb">
-  <li><a href="{{url_for('dashboard')}}">Programs</a></li>
- <li><a href="{{url_for('show_program', program_id=workout.parent_program.id, week=workout.week)}}">{{workout.parent_program.name}}</a></li>
-  <li class="active">{{ workout.name }}</li>
-</ol>
+        <ol class="breadcrumb">
+          <li><a href="{{url_for('dashboard')}}">Programs</a></li>
+         <li><a href="{{url_for('show_program', program_id=workout.parent_program.id, week=workout.week)}}">{{workout.parent_program.name}}</a></li>
+          <li class="active">{{ workout.name }}</li>
+        </ol>
 
-<div class="card">
-    <h2 class="card-title">{{ workout.name }}</h2>
-    <table class="table">
-        {% for exercise in workout.exercises: %}
-            <thead>
-                <tr>
-                    <th scope="col">{{exercise.type}} x {{ exercise.sets|count }} sets</th>
-                    <th scope="col">Reps</th>
-                    <th scope="col">Weight</th>
-                </tr>
-            </thead>
-            <tbody>
-            {% for set in exercise.sets|reverse: %}
-                <tr>
-                    <td></td>
-                    <td>{{set.reps}}</td>
-                    <td>{{set.weight}} lbs.</td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        {% endfor %}
-    </table>
-</div>
+        <div class="card">
+            <h2 class="card-title">{{ workout.name }}</h2>
+            <p>Date: {{workout.date}}</p>
+            <table class="table">
+                {% for exercise in workout.exercises: %}
+                    <thead>
+                        <tr>
+                            <th scope="col">{{exercise.type}} x {{ exercise.sets|count }} sets</th>
+                            <th scope="col">Reps</th>
+                            <th scope="col">Weight</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for set in exercise.sets|reverse: %}
+                        <tr>
+                            <td></td>
+                            <td>{{set.reps}}</td>
+                            <td>{{set.weight}} lbs.</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                {% endfor %}
+            </table>
+        </div>
 
-<div class="text-center">
-    <a class="btn btn-lg btn-danger" href="{{url_for('delete_workout', workout_id=workout.id, week=workout.week)}}">Delete workout</a>
-</div>
-{% include "footer.html" %}
+        <div class="text-center">
+            <a class="btn btn-lg btn-danger" href="{{url_for('delete_workout', workout_id=workout.id, week=workout.week)}}">Delete workout</a>
+        </div>
+
+    </div><!--end container-fluid-->
 {% endblock %}
