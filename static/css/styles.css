@@ -170,7 +170,7 @@ form td {
 
 /* Nav Bar */
 
-.navbar.navbar-inverted  {
+.navbar.navbar-inverse  {
     margin-bottom: 0;
 }
 
@@ -198,25 +198,25 @@ form td {
     background-color: #1d2830;
 }
 
-.navbar-inverted .navbar-nav > li > a:hover,
-.navbar-inverted .navbar-nav > li > a:focus{
+.navbar-inverse .navbar-nav > li > a:hover,
+.navbar-inverse .navbar-nav > li > a:focus{
     background-color: #151a1e;
     color: #61819e;
 }
 
-.navbar-inverted > .navbar-header > .navbar-brand{
+.navbar-inverse > .navbar-header > .navbar-brand{
     font-family: 'Bebas Neue', cursive;
     color: #ad361f;
     font-size: 2.5em;
     text-shadow: 1px 1px 5px rgba(0, 0, 0, .7);
 }
 
-.navbar-inverted > .navbar-header > .navbar-brand:hover {
+.navbar-inverse > .navbar-header > .navbar-brand:hover {
     background-color: #151a1e;
     color: #df4020;
 }
 
-.navbar-inverted > .navbar-header > .navbar-toggle:hover {
+.navbar-inverse > .navbar-header > .navbar-toggle:hover {
     background-color: #151a1e;
 }
 
@@ -267,18 +267,19 @@ form td {
 
 
 .big-heading-div {
-    position: absolute;
+    position: relative;
     width: 70%;
     top: 10%;
     left: 6%;
 }
 
 .big-heading-div h1 {
-    font-size: 6rem;
+    font-size: 6.5rem;
     line-height: 1.5;
     font-family: 'Anton', sans-serif;
     color: #d5d9dd;
     text-shadow: 3px 5px 10px rgba(0, 0, 0, .7);
+    margin: 0;
 }
 
 .landing {
