@@ -296,7 +296,7 @@ form td {
     top: 50%;
     left: 50%;
     transform: translate(-50%,-50%);
-    width: 60%;
+    width: 75%;
 }
 
 
@@ -324,6 +324,10 @@ form td {
 	.user-card {
         margin-right: 6px;
 	    margin-left: 6px;
+    }
+
+    #banner {
+        font-size: 50px;
     }
 
     .banner-container {

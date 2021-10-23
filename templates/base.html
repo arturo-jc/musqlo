@@ -11,10 +11,6 @@
     <!--  Font Awesome -->
     <script src="https://kit.fontawesome.com/aebaafdeec.js" crossorigin="anonymous"></script>
 
-    <!--  FitText -->
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
-    <script src="{{ url_for('static', filename='js/jquery.fittext.js')}}"></script>
-
 {% endblock %}
 
 {% block styles %}
@@ -66,5 +62,5 @@
         <p>Made by <a href="https://arturojc.com/" target="_blank">Arturo Javier-Castellanos</a>.</p>
     </div>
 
-    <script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    {{super()}}
 {% endblock %}
