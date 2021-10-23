@@ -78,6 +78,13 @@
             <div class="col-lg-6">
                 <div class="card">
                     <h2 class="card-title">Make program</h2>
+                    {% with messages = get_flashed_messages() %}
+                        {% if messages %}
+                          {% for message in messages %}
+                           <p class="flash">{{ message }}</p>
+                          {% endfor %}
+                        {% endif %}
+                    {% endwith %}
                     <p>Generate a program based on this template.</p>
                     <a class="btn btn-primary" href="{{url_for('make_program', program_template_id=template.id)}}">Make</a>
                 </div><!--end card -->

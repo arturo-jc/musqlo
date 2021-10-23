@@ -10,6 +10,11 @@
 
     <!--  Font Awesome -->
     <script src="https://kit.fontawesome.com/aebaafdeec.js" crossorigin="anonymous"></script>
+
+    <!--  FitText -->
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+    <script src="{{ url_for('static', filename='js/jquery.fittext.js')}}"></script>
+
 {% endblock %}
 
 {% block styles %}
@@ -60,5 +65,8 @@
     <div class="text-center" id="footer">
         <p>Made by <a href="https://arturojc.com/" target="_blank">Arturo Javier-Castellanos</a>.</p>
     </div>
+    <script>
+        $("#banner").fitText(1, {minFontSize: '50px'});
+    </script>
 {{super()}}
 {% endblock %}

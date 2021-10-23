@@ -18,7 +18,7 @@
                         {% for exercise in workout.exercise_templates: %}
                             <thead>
                                 <tr>
-                                    <th scope="col">{{exercise.type}} x {{ exercise.set_templates|count }} sets</th>
+                                    <th scope="col">{{exercise.type}} x {{ exercise.set_templates|count }} sets <a href="{{ url_for('delete_exercise_template', exercise_template_id=exercise.id) }}"><i class="fas fa-backspace"></i></a></th>
                                     <th scope="col">Reps</th>
                                 </tr>
                             </thead>

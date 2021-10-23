@@ -151,15 +151,15 @@ class Set(db.Model):
     exercise_id = Column(Integer, ForeignKey("exercises.id"))
     parent_exercise = relationship("Exercise", back_populates="sets")
 
-# # CREATE TABLES THEN COMMENT OUT
-# db.create_all()
-#
-# # POPULATE DAYS TABLE THEN COMMENT OUT
-# days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
-# for day in days:
-#     new_day = Day(name=day)
-#     db.session.add(new_day)
-# db.session.commit()
+# CREATE TABLES THEN COMMENT OUT
+db.create_all()
+
+# POPULATE DAYS TABLE THEN COMMENT OUT
+days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+for day in days:
+    new_day = Day(name=day)
+    db.session.add(new_day)
+db.session.commit()
 
 
 # USER AUTHENTICATION
@@ -174,6 +174,14 @@ def protect_program_template(f):
         return f(program_template_id, *args, **kwargs)
     return decorated_function
 
+def protect_exercise_template(f):
+    @wraps(f)
+    def decorated_function(exercise_template_id, *args, **kwargs):
+        requested_exercise_template = ExerciseTemplate.query.get(exercise_template_id)
+        if requested_exercise_template.parent_workout_template.parent_program_template.user_id != current_user.id:
+            return abort(403)
+        return f(exercise_template_id, *args, **kwargs)
+    return decorated_function
 
 def protect_workout_template(f):
     @wraps(f)
@@ -377,7 +385,6 @@ def show_program_template(program_template_id):
 
     new_workout_form = NewWorkoutForm()
     if new_workout_form.validate_on_submit():
-
         day_ids = new_workout_form.days.data
         selected_days = [Day.query.get(day_id) for day_id in day_ids]
         new_workout_template = WorkoutTemplate(
@@ -527,6 +534,16 @@ def show_workout(workout_id):
 
 # DELETE
 
+@app.route("/exercise-templates/<int:exercise_template_id>/delete")
+@protect_exercise_template
+def delete_exercise_template(exercise_template_id):
+    requested_exercise_template = ExerciseTemplate.query.get(exercise_template_id)
+    parent_workout_template_id = requested_exercise_template.workout_template_id
+    for set_template in requested_exercise_template.set_templates:
+        db.session.delete(set_template)
+    db.session.delete(requested_exercise_template)
+    db.session.commit()
+    return redirect(url_for('show_workout_template', workout_template_id=parent_workout_template_id))
 
 @app.route("/workout-templates/<int:workout_template_id>/delete")
 @protect_workout_template
@@ -618,7 +635,9 @@ def delete_user():
 @protect_program_template
 def make_program(program_template_id):
     requested_program_template = ProgramTemplate.query.get(program_template_id)
-
+    if not requested_program_template.workout_templates:
+        flash("This template has no workouts. Add a workout before making a program.")
+        return redirect(url_for('show_program_template', program_template_id=program_template_id))
     exercises = []
     for workout_template in requested_program_template.workout_templates:
         for exercise_template in workout_template.exercise_templates:
@@ -679,4 +698,4 @@ def make_program(program_template_id):
 
 
 if __name__ == "__main__":
-    app.run()
+    app.run(debug=True)

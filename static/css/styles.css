@@ -18,7 +18,7 @@ p a:hover {
 
 .container-fluid {
     margin-top: 20px;
-    padding: 1% 7%;
+    padding: 1% 15%;
     }
 
 .card {
@@ -27,6 +27,14 @@ p a:hover {
     box-shadow: 0px 0 30px rgba(8, 13, 17, 0.5);
     padding: 0 20px 30px;
     margin-bottom: 30px;
+}
+
+.user-card {
+    background-color: #1d2830;
+    border-radius: 5px;
+    box-shadow: 0px 0 30px rgba(8, 13, 17, 0.5);
+    padding: 0 20px 30px;
+    margin: 0 20% 30px 20%;
 }
 
 .card-title {
@@ -265,32 +273,59 @@ form td {
 
 /* Landing */
 
-
-.big-heading-div {
-    position: relative;
-    width: 70%;
-    top: 10%;
-    left: 6%;
-}
-
-.big-heading-div h1 {
-    font-size: 6.5rem;
+#banner {
+    font-size: 100px;
     line-height: 1.5;
     font-family: 'Anton', sans-serif;
     color: #d5d9dd;
     text-shadow: 3px 5px 10px rgba(0, 0, 0, .7);
-    margin: 0;
 }
 
 .landing {
     background-image: linear-gradient(to top right, rgba(8, 13, 17, 0.9), rgba(18, 29, 38, 0.12)), url("images/bg.jpg");
     height: 500px; /* You must set a specified height */
+    width: 100%;
     background-position: center; /* Center the image */
     background-repeat: no-repeat; /* Do not repeat the image */
     background-size: cover; /* Resize the background image to cover the entire container */
+    position: relative;
     }
 
+.banner-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    width: 75%;
+}
 
+
+@media (max-width: 978px) {
+	.container-fluid {
+        margin-top: 20px;
+        padding: 1% 0;
+	}
+	.row {
+        margin-right: 0;
+        margin-left: 0;
+	}
+    .col-lg-6{
+	    padding-left: 0;
+	    padding-right: 0;
+	}
+	.breadcrumb{
+	    margin-right: 6px;
+	    margin-left: 6px;
+	}
+	.card{
+        margin-right: 6px;
+	    margin-left: 6px;
+	}
+	.user-card {
+        margin-right: 6px;
+	    margin-left: 6px;
+    }
+}
 /* The following gives Footer desired behavior (credit: https://web.archive.org/web/20141018105554/http://www.cssstickyfooter.com:80/) */
 
 
