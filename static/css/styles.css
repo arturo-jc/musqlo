@@ -296,7 +296,7 @@ form td {
     top: 50%;
     left: 50%;
     transform: translate(-50%,-50%);
-    width: 75%;
+    width: 60%;
 }
 
 
@@ -325,6 +325,10 @@ form td {
         margin-right: 6px;
 	    margin-left: 6px;
     }
+
+    .banner-container {
+    width: 100%;
+}
 }
 /* The following gives Footer desired behavior (credit: https://web.archive.org/web/20141018105554/http://www.cssstickyfooter.com:80/) */
 

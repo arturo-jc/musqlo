@@ -1,3 +1,9 @@
+/*Custom */
+
+$( document ).ready(function() {
+    $("#banner").fitText(1, {minFontSize: '60px', maxFontSize: '80px'});
+});
+
 
 /*global jQuery */
 /*!
