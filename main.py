@@ -151,15 +151,15 @@ class Set(db.Model):
     exercise_id = Column(Integer, ForeignKey("exercises.id"))
     parent_exercise = relationship("Exercise", back_populates="sets")
 
-# CREATE TABLES THEN COMMENT OUT
-db.create_all()
-
-# POPULATE DAYS TABLE THEN COMMENT OUT
-days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
-for day in days:
-    new_day = Day(name=day)
-    db.session.add(new_day)
-db.session.commit()
+# # CREATE TABLES THEN COMMENT OUT
+# db.create_all()
+#
+# # POPULATE DAYS TABLE THEN COMMENT OUT
+# days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+# for day in days:
+#     new_day = Day(name=day)
+#     db.session.add(new_day)
+# db.session.commit()
 
 
 # USER AUTHENTICATION
@@ -698,4 +698,4 @@ def make_program(program_template_id):
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run()
