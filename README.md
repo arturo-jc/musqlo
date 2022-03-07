@@ -8,29 +8,29 @@ https://musqlo.herokuapp.com/
 
 MUSQLO is a Flask application designed to create workout programs based on linear progression&mdash;that is, programs where the weight of the lifts increases by a set amount every session.
 
-While it's possible to use spreadsheets to do the same thing, the motivation for the app is to make the process both quicker and more convenient.
+To create a program, start by creating a weekly schedule. What exercises are you supposed to perform each day of the week? Once you've created a schedule, enter the following:
 
-To create a program, the first step is to create a weekly schedule. What exercises are you supposed to perform each day of the week?
+* Starting date
+* Pogram duration
+* Starting weight for each exercise
+* Increment per session
 
-![schedule screenshot](https://github.com/arturo-jc/musqlo/blob/media/schedule.jpg?raw=true)
-
-Once the user has created a schedule, they can simply select a starting date, a starting weight for each exercise, and increment per session, and the app generates the requested program.
-
-![selection screenshot](https://github.com/arturo-jc/musqlo/blob/media/selection.jpg?raw=true)
+Once you've entered all this, the app will generate the desired program.
 
 ![program screenshot](https://github.com/arturo-jc/musqlo/blob/media/program.jpg?raw=true)
 
 ## Features
+* Responsive
 * Authentication
-* Responsiveness
 
-## Technologies
+## Built with
 
-* HTML
-* CSS
 * Python
 * Fask
 * Flask-Bootstrap
 * Flask-Login
 * SQLAlchemy
 * WTForms
+
+## To-do
+* Add multi-week schedule
