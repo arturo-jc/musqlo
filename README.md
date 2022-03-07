@@ -10,7 +10,15 @@ MUSQLO is a Flask application designed to create workout programs based on linea
 
 While it's possible to use spreadsheets to do the same thing, the motivation for the app is to make the process both quicker and more convenient.
 
-To create a program, the first step is to create a weekly schedule. What exercises are you supposed to perform each day of the week? Once the user has created a schedule, they can simply select a starting date, a starting weight for each exercise, and increment per session, and the app generates the requested program.
+To create a program, the first step is to create a weekly schedule. What exercises are you supposed to perform each day of the week?
+
+![schedule screenshot](https://github.com/arturo-jc/musqlo/blob/media/schedule.jpg?raw=true)
+
+Once the user has created a schedule, they can simply select a starting date, a starting weight for each exercise, and increment per session, and the app generates the requested program.
+
+![selection screenshot](https://github.com/arturo-jc/musqlo/blob/media/selection.jpg?raw=true)
+
+![program screenshot](https://github.com/arturo-jc/musqlo/blob/media/program.jpg?raw=true)
 
 ## Features
 * Authentication
