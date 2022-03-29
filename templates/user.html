@@ -15,7 +15,7 @@
                       {% endfor %}
                     {% endif %}
                 {% endwith %}
-                {% if current_user.id != 16 %}
+                {% if current_user.id != 2 %}
                     <label class="card-subtitle">Change password</label>
                     {{ wtf.quick_form(form, novalidate=True, button_map={"change": "primary"}) }}
                 {% endif %}
